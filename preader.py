@@ -2,7 +2,7 @@ import win32com.client as win32
 from eventmanager import *
 from pptx import Presentation
 import time
-from services import atts, tts, touch
+from services import atts, tts, touch, motion
 import qi
 langs = {
     "rus" : "Alyona22Enhanced",
@@ -21,7 +21,7 @@ class PresentationReader:
         self.presentation.SlideShowSettings.ShowWithAnimation = False
         self.slideShow = self.presentation.SlideShowSettings.Run()
         self.eventHandler = Eventloop()
-        self.eventHandler.addEvent(Event(self._toggle, [], binaryPredicate(lambda: touch.getStatus()[8][1], False, True)))
+        self.eventHandler.addEvent(Event(self._stop, [], binaryPredicate(lambda: touch.getStatus()[8][1], False, True)))
         self.eventHandler.addEvent(Event(self._nextSlide, [], binaryPredicate(lambda: touch.getStatus()[7][1], False, True)))
         self.eventHandler.addEvent(Event(self._prevSlide, [], binaryPredicate(lambda: touch.getStatus()[9][1], False, True)))
 
@@ -30,11 +30,11 @@ class PresentationReader:
         self.iSlide = 0
         self.eventHandler.start()
         while self.iSlide < len(self.ppt.slides):
-            while self.stop:
-                time.sleep(0.5)
+            if self.stop:
+                break
             self._readSlide(self.iSlide)
-            self.iSlide += 1
             self.slideShow.View.GotoSlide(self.iSlide + 1)
+            self.iSlide += 1
             time.sleep(1)
 
     def close(self):
@@ -53,8 +53,8 @@ class PresentationReader:
         # tts.say(str(notes[page].encode('utf-8')))
         say.wait()
 
-    def _toggle(self):
-        self.stop = not self.stop
+    def _stop(self):
+        self.stop = True
         tts.stopAll()
    
     def _nextSlide(self):
