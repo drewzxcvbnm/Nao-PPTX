@@ -32,8 +32,8 @@ class PresentationReader:
         while self.iSlide < len(self.ppt.slides):
             if self.stop:
                 break
-            self._readSlide(self.iSlide)
             self.slideShow.View.GotoSlide(self.iSlide + 1)
+            self._readSlide(self.iSlide)
             self.iSlide += 1
             time.sleep(1)
 
