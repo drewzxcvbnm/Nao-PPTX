@@ -4,6 +4,7 @@ from pptx import Presentation
 import time
 from services import atts, tts, touch, motion
 import qi
+from sreader import SlideReader
 langs = {
     "rus" : "Alyona22Enhanced",
     "eng" : "naoenu"
@@ -24,6 +25,7 @@ class PresentationReader:
         self.eventHandler.addEvent(Event(self._stop, [], binaryPredicate(lambda: touch.getStatus()[8][1], False, True)))
         self.eventHandler.addEvent(Event(self._nextSlide, [], binaryPredicate(lambda: touch.getStatus()[7][1], False, True)))
         self.eventHandler.addEvent(Event(self._prevSlide, [], binaryPredicate(lambda: touch.getStatus()[9][1], False, True)))
+        self.slideReader = SlideReader()
 
     def readSlides(self):
         self.ppt=Presentation(self.path)
@@ -33,7 +35,7 @@ class PresentationReader:
             if self.stop:
                 break
             self.slideShow.View.GotoSlide(self.iSlide + 1)
-            self._readSlide(self.iSlide)
+            self.slideReader.readSlide(self, self.ppt.slides[self.iSlide])
             self.iSlide += 1
             time.sleep(1)
 
@@ -42,16 +44,6 @@ class PresentationReader:
         self.presentation.Close()
         self.ppoint.Quit()
         self.eventHandler.join()
-
-    def _readSlide(self, i):
-        global atts
-        slide = self.ppt.slides[i]
-        textNote = slide.notes_slide.notes_text_frame.text
-        notes = textNote.encode('utf-8')
-        print str(notes)
-        say = qi.async(atts.say, (str(notes)), delay=100)
-        # tts.say(str(notes[page].encode('utf-8')))
-        say.wait()
 
     def _stop(self):
         self.stop = True
