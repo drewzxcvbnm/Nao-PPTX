@@ -1,12 +1,18 @@
-from services import atts, session
+from services import atts, tts, session, mem
+import qi, win32com
+from eventmanager import Eventloop, changedValuePredicate, Event
+import pythoncom
 
 class SlideReader:
 
     def __init__(self, slideShow):
         self.slideShow = slideShow
-        mem = session.service("ALMemory")
-        sub = mem.subscriber("ALTextToSpeech/CurrentBookMark")
-        sub.signal.connect(self._next())
+        mem.insertData("event", None)
+        self.evm = Eventloop()
+        self.ssID = pythoncom.CoMarshalInterThreadInterfaceInStream(pythoncom.IID_IDispatch, slideShow)
+        gen = self._next()
+        self.evm.addEvent(Event(lambda: next(gen), [], lambda: mem.getData("event") == "next"))
+        self.evm.start()
 
     def readSlide(self, slide):
         textNote = slide.notes_slide.notes_text_frame.text
@@ -14,8 +20,17 @@ class SlideReader:
         print str(notes)
         say = qi.async(atts.say, (str(notes)), delay=100)
         say.wait()
-
+        print "DATA: "+str(mem.getData("event")) + "|"
+        
     def _next(self):
-        def next(val):
-            self.slideShow.View.Next()
-        return next
+        print "NEEEXT"
+        mem.insertData("event", None)
+        pythoncom.CoInitialize()
+        ss = win32com.client.Dispatch(pythoncom.CoGetInterfaceAndReleaseStream(self.ssID, pythoncom.IID_IDispatch))
+        ss.View.Next()
+        yield
+        while True:
+            print "NEEEXT"
+            mem.insertData("event", None)
+            ss.View.Next()
+            yield

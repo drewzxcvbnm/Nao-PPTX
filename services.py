@@ -9,4 +9,6 @@ alife = session.service("ALAutonomousLife")
 motion = session.service("ALMotion")
 asr = session.service("ALSpeechRecognition")
 touch = session.service("ALTouch")
+mem = session.service("ALMemory")
+
 

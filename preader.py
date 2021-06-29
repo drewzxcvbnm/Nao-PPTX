@@ -19,13 +19,13 @@ class PresentationReader:
         self.ppoint = win32.gencache.EnsureDispatch('Powerpoint.Application')
         self.ppoint.Visible = True
         self.presentation = self.ppoint.Presentations.Open(path)
-        self.presentation.SlideShowSettings.ShowWithAnimation = False
+        # self.presentation.SlideShowSettings.ShowWithAnimation = False
         self.slideShow = self.presentation.SlideShowSettings.Run()
         self.eventHandler = Eventloop()
         self.eventHandler.addEvent(Event(self._stop, [], binaryPredicate(lambda: touch.getStatus()[8][1], False, True)))
         self.eventHandler.addEvent(Event(self._nextSlide, [], binaryPredicate(lambda: touch.getStatus()[7][1], False, True)))
         self.eventHandler.addEvent(Event(self._prevSlide, [], binaryPredicate(lambda: touch.getStatus()[9][1], False, True)))
-        self.slideReader = SlideReader()
+        self.slideReader = SlideReader(self.slideShow)
 
     def readSlides(self):
         self.ppt=Presentation(self.path)
@@ -35,7 +35,7 @@ class PresentationReader:
             if self.stop:
                 break
             self.slideShow.View.GotoSlide(self.iSlide + 1)
-            self.slideReader.readSlide(self, self.ppt.slides[self.iSlide])
+            self.slideReader.readSlide(self.ppt.slides[self.iSlide])
             self.iSlide += 1
             time.sleep(1)
 
