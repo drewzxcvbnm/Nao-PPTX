@@ -1,6 +1,7 @@
 import qi
 from services import asr, alife
 import preader
+import sys
 
 def main():
     asr.pause(1)
@@ -9,6 +10,7 @@ def main():
     pr = preader.PresentationReader(path)
     pr.readSlides()
     pr.close()
+    sys.exit(0)
 
 
 
