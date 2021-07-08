@@ -7,7 +7,7 @@ import pythoncom
 def main():
     asr.pause(1)
     alife.setState("safeguard")
-    path = r"C:\Users\tsi_nao\Desktop\Nao-PPTX\naoPPTX.pptx"
+    path = r"C:\Users\tsi_nao\Desktop\Nao-PPTX\presentations\naoPPTX.pptx"
     pr = preader.PresentationReader(path)
     pr.readSlides()
     pr.close()
@@ -16,3 +16,4 @@ def main():
 
 
 main()
+
