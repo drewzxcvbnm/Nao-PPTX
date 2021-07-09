@@ -1,3 +1,6 @@
+import re
+
+
 class XmlParsingException(Exception):
     pass
 
@@ -14,18 +17,23 @@ class XmlTagService:
         return xmltags[name](fulltag)
 
     def getTagName(self, tag):
-        return tag[1: max(tag.find(' '), tag.find('>'))]
+        if ' ' in tag:
+            return tag[1: tag.find(' ')]
+        return re.sub("(<|>|/)", "", tag)
 
     def isSingular(self, tag):
         return tag[-2] == '/'
 
     def getAttributes(self, startTag):
         attrs = {}
-        tag = startTag[1:-1]
-        tag = tag[max(tag.find(' '), tag.find('>')) + 1:]
+        name = self.getTagName(startTag)
+        tag = re.sub("(<|>|/|{})".format(name), "", startTag).strip(" ")
+        if tag == "":
+            return attrs
         for attr in tag.split(' '):
             k, v = attr.split('=')
-            attrs[k] = v.replace('"', '')
+            start_search = v.find('"') + 1
+            attrs[k] = v[start_search: v[start_search:].find('"') + 1]
         return attrs
 
     def getStartTag(self, fulltag):
@@ -43,7 +51,7 @@ class XmlTagService:
         return tag
 
     def getTagContent(self, fulltag):
-        if fulltag.contains('<') < 2:
+        if fulltag.count('<') < 2:
             raise XmlParsingException("Cannot extract content from:{}".format(fulltag))
         srbound = fulltag.find('>')
         elbound = fulltag.rfind('<')
@@ -60,21 +68,27 @@ class DoHandler:
         self.attrs = self.xmltagservice.getAttributes(startTag)
         if fulltag.count('<') == 1:
             return self._handleStartTag(fulltag)
-        endTag = self.xmltagservice.getEndTag(fulltag)
-        return self._handleStartTag(startTag) + self.xmltagservice.getTagContent(fulltag) + self.handleEndTag(endTag)
+        return self._handleStartTag() + self.xmltagservice.getTagContent(fulltag) + self._handleEndTag()
 
-    def _handleStartTag(self, startTag):
-        return "^start({})".format(self.attrs["animation"])
+    def _handleStartTag(self):
+        return "^start({}) ".format(self.attrs["animation"])
 
-    def _handleEndTag(self, endTag):
-        return "^wait({})".format(self.attrs["animation"])
+    def _handleEndTag(self):
+        return " ^wait({}) ".format(self.attrs["animation"])
 
 
 def nextHandler(tag):
     return "$event=next"
 
 
+def pauseHandler(tag):
+    s = XmlTagService()
+    attrs = s.getAttributes(tag)
+    return "\\pau={}\\".format(attrs.get('time', 100))
+
+
 xmltags = {
     "do": DoHandler(),
-    "next": nextHandler(),
+    "next": nextHandler,
+    "pause": pauseHandler,
 }
