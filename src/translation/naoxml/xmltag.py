@@ -20,7 +20,7 @@ class XmlTag:
     def getAttributes(self):
         startTag = self.getStartTag()
         attrs = {}
-        name = self.getTagName(startTag)
+        name = self.getTagName()
         tag = re.sub("(<|>|{})".format(name), "", startTag).strip("/").strip(" ")
         if tag == "":
             return attrs

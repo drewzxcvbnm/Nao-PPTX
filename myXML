@@ -6,7 +6,7 @@ TAGS:
 
     <set/> - user for settings semi global values:
         animation-ns (OPTIONAL) -  folder path to use for finding animations.
-        voice (OPTIONAL) - set voice for speech
+        voice (OPTIONAL, neutral/joyful/didactic) - set voice for speech
 
     <pause/> - pause speech:
         time (OPTIONAL, default = 100) - pause time
