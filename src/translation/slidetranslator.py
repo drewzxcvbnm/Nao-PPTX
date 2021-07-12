@@ -1,3 +1,4 @@
+# coding=utf-8
 from naoxml.xmltranslator import XmlTagService, XmlParsingException
 
 
@@ -81,8 +82,32 @@ class WidthFirstXmlParser:
         return startName == endName and endTag[1] == '/'
 
 
+class CharacaterNormalizer:
+    def __init__(self):
+        self.notNormalizedDic = {
+            '“': '"',
+            '”': '"',
+            '«': '"',
+            '»': '"'
+        }
+        #     u"\u201c": '"',
+        #     u"\u201d": '"',
+        #     u"\u00AB": '"',
+        #     u"\u00BB»": '"'
+        # }
+
+    def parse(self, text):
+        for k, v in self.notNormalizedDic.items():
+            text = text.replace(k, v)
+            # text = text.decode("utf-8").replace(k, v)
+        print text
+        return text
+
+
+
 class SlideTranslationSystem:
-    parsers = [WidthFirstXmlParser()]
+    parsers = [CharacaterNormalizer(),
+               WidthFirstXmlParser()]
 
     @staticmethod
     def translate(slideText):

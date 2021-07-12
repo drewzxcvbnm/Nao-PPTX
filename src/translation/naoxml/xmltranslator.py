@@ -27,7 +27,7 @@ class XmlTagService:
     def getAttributes(self, startTag):
         attrs = {}
         name = self.getTagName(startTag)
-        tag = re.sub("(<|>|/|{})".format(name), "", startTag).strip(" ")
+        tag = re.sub("(<|>|{})".format(name), "", startTag).strip("/").strip(" ")
         if tag == "":
             return attrs
         for attr in tag.split(' '):
@@ -78,13 +78,13 @@ class DoHandler:
 
 
 def nextHandler(tag):
-    return "$event=next"
+    return " $event=next "
 
 
 def pauseHandler(tag):
     s = XmlTagService()
     attrs = s.getAttributes(tag)
-    return "\\pau={}\\".format(attrs.get('time', 100))
+    return " \\pau={}\\ ".format(attrs.get('time', 100))
 
 
 xmltags = {

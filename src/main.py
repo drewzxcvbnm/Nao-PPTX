@@ -1,5 +1,5 @@
 import qi
-from services import asr, alife
+from services import asr, alife, posture
 import preader
 import sys
 import pythoncom
