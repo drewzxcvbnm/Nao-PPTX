@@ -1,4 +1,5 @@
-from services import atts, tts, session, mem, eventqueue
+from services import atts, tts, session, mem
+from threadeventexecutor import ThreadEventExecutor
 import qi, win32com
 from eventmanager import Eventloop, changedValuePredicate, Event
 import pythoncom
@@ -12,13 +13,11 @@ class SlideReader:
 
     def __init__(self, slideShow):
         self.slideShow = slideShow
-        # mem.declareEvent("event")
-        # self.subscriber = mem.subscriber("event")
-        global eventmap
         self.ssID = pythoncom.CoMarshalInterThreadInterfaceInStream(pythoncom.IID_IDispatch, slideShow)
         gen = self._next()
+        executor = ThreadEventExecutor()
         runner = lambda: next(gen)
-        eventmap["next"] = lambda: eventqueue.add(runner)
+        eventmap["next"] = lambda: executor.addEventToQueue(runner)
 
     def readSlide(self, slide):
         textNote = slide.notes_slide.notes_text_frame.text
@@ -41,5 +40,4 @@ class SlideReader:
             yield
 
     def __del__(self):
-        global eventmap
         eventmap.pop("next")
