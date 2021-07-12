@@ -1,0 +1,4 @@
+
+class XmlParsingException(Exception):
+    pass
+

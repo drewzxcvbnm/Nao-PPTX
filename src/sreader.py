@@ -1,11 +1,9 @@
 from services import atts, tts, session, mem
 from threadeventexecutor import ThreadEventExecutor
 import qi, win32com
-from eventmanager import Eventloop, changedValuePredicate, Event
 import pythoncom
 from eventmap import eventmap
 from translation.slidetranslator import SlideTranslationSystem
-from threading import Thread, Lock
 
 
 

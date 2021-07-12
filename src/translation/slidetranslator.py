@@ -1,5 +1,6 @@
 # coding=utf-8
 from naoxml.xmltranslator import XmlTagService, XmlParsingException
+from naoxml.xmltag import XmlTag
 
 
 def catchError(message, arg):
@@ -43,14 +44,14 @@ class WidthFirstXmlParser:
 
     @catchError("Error finding end tag for:", 1)
     def _getEndTag(self, stag, tagFinder):
-        stagName = self.xmlTagService.getTagName(stag)
+        stagName = XmlTag(stag).getTagName()
         numToFind = 1
         l, r, tag = None, None, None
         while numToFind > 0:
             l, r, tag = next(tagFinder)
             if self._isValidEndTag(stag, tag):
                 numToFind -= 1
-            elif self.xmlTagService.getTagName(tag) == stagName and not self._isSingular(tag):
+            elif XmlTag(tag).getTagName() == stagName and not self._isSingular(tag):
                 numToFind += 1
         return l, r, tag
 
@@ -77,8 +78,8 @@ class WidthFirstXmlParser:
         return tag[-2] == '/'
 
     def _isValidEndTag(self, startTag, endTag):
-        startName = self.xmlTagService.getTagName(startTag)
-        endName = self.xmlTagService.getTagName(endTag)
+        startName = XmlTag(startTag).getTagName()
+        endName = XmlTag(endTag).getTagName()
         return startName == endName and endTag[1] == '/'
 
 
@@ -90,19 +91,12 @@ class CharacaterNormalizer:
             '«': '"',
             '»': '"'
         }
-        #     u"\u201c": '"',
-        #     u"\u201d": '"',
-        #     u"\u00AB": '"',
-        #     u"\u00BB»": '"'
-        # }
 
     def parse(self, text):
         for k, v in self.notNormalizedDic.items():
             text = text.replace(k, v)
-            # text = text.decode("utf-8").replace(k, v)
         print text
         return text
-
 
 
 class SlideTranslationSystem:
