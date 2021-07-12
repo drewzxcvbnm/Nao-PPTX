@@ -1,6 +1,7 @@
 # coding=utf-8
 from naoxml.xmltranslator import XmlTagService, XmlParsingException
 from naoxml.xmltag import XmlTag
+import re
 
 
 def catchError(message, arg):
@@ -99,9 +100,16 @@ class CharacaterNormalizer:
         return text
 
 
+class DuplicateSpaceRemover:
+
+    def parse(self, text):
+        return re.sub(" +", " ", text)
+
+
 class SlideTranslationSystem:
     parsers = [CharacaterNormalizer(),
-               WidthFirstXmlParser()]
+               WidthFirstXmlParser(),
+               DuplicateSpaceRemover()]
 
     @staticmethod
     def translate(slideText):
