@@ -29,9 +29,12 @@ TAGS:
         mode (MANDATORY, word/sent/char) - reading mode to use 
     <rmode/> - set reading mode to default (sentence)
 
+    <rst/> - set default to all parametrs
+
     <stext> - идея просто пушка, БОМБА НАХУЙ я бы сказал. Просто сделать парсер для парсера который парсит в парсер. План ахуенный, я за.
     <stext/> - Устал парситься и хайпиться, переходи на более низкий уровень парсинга. Ну ничего, скоро на ассемблере будешь писать GLHF
-    
+
+
 
 
 <do Monster_1 = ^start(..)

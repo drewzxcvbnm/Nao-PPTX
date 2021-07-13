@@ -75,10 +75,75 @@ def setHandler(tag):
     return ret
 
 
+class RmodeHandler:
+
+    def __call__(self, tag):
+        tag = XmlTag(tag)
+        self.attrs = tag.getAttributes()
+        if tag.isSingular():
+            return self._handleStartTag()
+        return self._handleStartTag() + tag.getTagContent() + self._handleEndTag()
+
+    def _handleStartTag(self):
+        mode = self.attrs["mode"]
+        return " \\readmode={}\\ ".format(mode)
+
+    def _handleEndTag(self):
+        return " \\readmode=sent\\ "
+
+
+class VolHandler:
+
+    def __call__(self, tag):
+        tag = XmlTag(tag)
+        self.attrs = tag.getAttributes()
+        if tag.isSingular():
+            return self._handleStartTag()
+        return self._handleStartTag() + tag.getTagContent() + self._handleEndTag()
+
+    def _handleStartTag(self):
+        value = self.attrs["value"]
+        return " \\vol={}\\ ".format(value)
+
+    def _handleEndTag(self):
+        return " \\vol=100\\ "
+
+
+class RspdHandler:
+
+    def __call__(self, tag):
+        tag = XmlTag(tag)
+        self.attrs = tag.getAttributes()
+        if tag.isSingular():
+            return self._handleStartTag()
+        return self._handleStartTag() + tag.getTagContent() + self._handleEndTag()
+
+    def _handleStartTag(self):
+        speed = self.attrs["speed"]
+        return " \\rspd={}\\ ".format(speed)
+
+    def _handleEndTag(self):
+        return " \\rspd=100\\ "
+
+
+# @StrToXmlTag
+# def rmodeHandler(tag):
+#     attrs = tag.getAttributes()
+#     return " \\readmode={}\\ ".format(attrs.get('mode', 100))
+
+@StrToXmlTag
+def rstHandler(tag):
+    return " \\rst\\ "
+
+
 xmltags = {
     "do": DoHandler(),
     "next": nextHandler,
     "pause": pauseHandler,
     "emph": emphHandler,
-    "set": setHandler
+    "set": setHandler,
+    "rspd": RspdHandler(),
+    "vol": VolHandler(),
+    "rmode": RmodeHandler(),
+    "rst": rstHandler
 }
