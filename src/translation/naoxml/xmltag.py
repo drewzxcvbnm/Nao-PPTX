@@ -15,6 +15,9 @@ class XmlTag:
         return re.sub("(<|>|/)", "", tag)
 
     def isSingular(self):
+        return self.tag.count('<') == 1
+
+    def isClosed(self):
         return self.tag[-2] == '/'
 
     def getAttributes(self):

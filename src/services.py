@@ -1,8 +1,8 @@
 import qi
 
 session = qi.Session()
-# session.connect("tcp://" + "192.168.253.155" + ":" + "9559")
-session.connect("tcp://" + "192.168.252.226" + ":" + "9559")
+session.connect("tcp://" + "192.168.253.155" + ":" + "9559")
+# session.connect("tcp://" + "192.168.252.226" + ":" + "9559")
 # session.connect("tcp://" + "192.168.253.68" + ":" + "9559")
 #global tts, atts, touch
 tts = session.service("ALTextToSpeech")
