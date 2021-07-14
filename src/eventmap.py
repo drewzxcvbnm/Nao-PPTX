@@ -6,6 +6,7 @@ def handleEvent(x):
     print "HANDLING " + x
     if x not in eventmap.keys():
         print "ERROR: eventmap cannot handle event:" + x
+    mem.insertData("event", None)
     eventmap[x]()
 
 
