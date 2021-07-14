@@ -1,0 +1,4 @@
+
+class XmlTranslationException(Exception):
+    pass
+

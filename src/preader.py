@@ -4,7 +4,7 @@ from pptx import Presentation
 import time
 from services import atts, tts, touch, motion
 import qi
-from sreader import SlideReader
+from slidepresentor import SlidePresentor
 langs = {
     "rus" : "Alyona22Enhanced",
     "eng" : "naoenu"
@@ -25,7 +25,7 @@ class PresentationReader:
         self.eventHandler.addEvent(Event(self._stop, [], binaryPredicate(lambda: touch.getStatus()[8][1], False, True)))
         self.eventHandler.addEvent(Event(self._nextSlide, [], binaryPredicate(lambda: touch.getStatus()[7][1], False, True)))
         self.eventHandler.addEvent(Event(self._prevSlide, [], binaryPredicate(lambda: touch.getStatus()[9][1], False, True)))
-        self.slideReader = SlideReader(self.slideShow)
+        self.slideReader = SlidePresentor(self.slideShow)
 
     def readSlides(self):
         self.ppt=Presentation(self.path)

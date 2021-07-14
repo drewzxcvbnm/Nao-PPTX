@@ -1,4 +1,4 @@
-from xmlparsingexception import XmlParsingException
+from xmltranslationexception import XmlTranslationException
 from xmltag import XmlTag
 
 xmltags = {}
@@ -19,7 +19,7 @@ class XmlTagService:
         tag = XmlTag(tag)
         name = tag.getTagName()
         if name not in xmltags.keys():
-            raise XmlParsingException("Cannot translate tag {}:{}".format(name, tag.str))
+            raise XmlTranslationException("Cannot translate tag {}:{}".format(name, tag.str))
         return xmltags[name](tag.str)
 
 
@@ -57,9 +57,9 @@ def pauseHandler(tag):
 def emphHandler(tag):
     attrs = tag.getAttributes()
     if "word" not in attrs.keys():
-        raise XmlParsingException("Emph tag. Missing 'word' attribute")
+        raise XmlTranslationException("Emph tag. Missing 'word' attribute")
     if "pos" not in attrs.keys():
-        raise XmlParsingException("Emph tag. Missing 'pos' attribute")
+        raise XmlTranslationException("Emph tag. Missing 'pos' attribute")
     return " \\emph={}\\ {} ".format(attrs["pos"], attrs["word"])
 
 
@@ -126,14 +126,25 @@ class RspdHandler:
         return " \\rspd=100\\ "
 
 
-# @StrToXmlTag
-# def rmodeHandler(tag):
-#     attrs = tag.getAttributes()
-#     return " \\readmode={}\\ ".format(attrs.get('mode', 100))
-
 @StrToXmlTag
 def rstHandler(tag):
     return " \\rst\\ "
+
+
+class VideoHandler:
+
+    def __call__(self, tag):
+        tag = XmlTag(tag)
+        self.attrs = tag.getAttributes()
+        if tag.isSingular():
+            return " $event=startvideo <split/> "
+        return self._handleStartTag() + tag.getTagContent() + self._handleEndTag()
+
+    def _handleStartTag(self):
+        return " $event=startvideo "
+
+    def _handleEndTag(self):
+        return " <split/> "
 
 
 xmltags = {
@@ -145,5 +156,6 @@ xmltags = {
     "rspd": RspdHandler(),
     "vol": VolHandler(),
     "rmode": RmodeHandler(),
-    "rst": rstHandler
+    "rst": rstHandler,
+    "video": VideoHandler(),
 }

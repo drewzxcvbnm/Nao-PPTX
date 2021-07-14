@@ -1,5 +1,5 @@
 import re
-from xmlparsingexception import XmlParsingException
+from xmltranslationexception import XmlTranslationException
 
 
 class XmlTag:
@@ -43,7 +43,7 @@ class XmlTag:
     def getEndTag(self):
         fulltag = self.tag
         if fulltag.contains('<') < 2:
-            raise XmlParsingException("Cannot extract end from:{}".format(fulltag))
+            raise XmlTranslationException("Cannot extract end from:{}".format(fulltag))
         lbound = fulltag.rfind('<')
         rbound = fulltag.rfind('>')
         tag = fulltag[lbound:rbound + 1]
@@ -52,7 +52,7 @@ class XmlTag:
     def getTagContent(self):
         fulltag = self.tag
         if fulltag.count('<') < 2:
-            raise XmlParsingException("Cannot extract content from:{}".format(fulltag))
+            raise XmlTranslationException("Cannot extract content from:{}".format(fulltag))
         srbound = fulltag.find('>')
         elbound = fulltag.rfind('<')
         return fulltag[srbound + 1:elbound]

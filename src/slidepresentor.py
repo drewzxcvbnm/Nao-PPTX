@@ -3,11 +3,10 @@ from threadeventexecutor import ThreadEventExecutor
 import qi, win32com
 import pythoncom
 from eventmap import eventmap
-from translation.slidetranslator import SlideTranslationSystem
+from translation.texttranslator import TextTranslationSystem
 
 
-
-class SlideReader:
+class SlidePresentor:
 
     def __init__(self, slideShow):
         self.slideShow = slideShow
@@ -21,7 +20,7 @@ class SlideReader:
         textNote = slide.notes_slide.notes_text_frame.text
         notes = textNote.encode('utf-8')
         print "Before translation:{}".format(str(notes))
-        notes = SlideTranslationSystem.translate(notes)
+        notes = TextTranslationSystem.translate(notes)
         print "After translation:{}".format(str(notes))
         say = qi.async(atts.say, (str(notes)), delay=100)
         say.wait()

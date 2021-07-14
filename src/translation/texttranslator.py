@@ -1,5 +1,5 @@
 # coding=utf-8
-from naoxml.xmltranslator import XmlTagService, XmlParsingException
+from naoxml.xmltranslator import XmlTagService, XmlTranslationException
 from naoxml.xmltag import XmlTag
 import re
 
@@ -15,7 +15,7 @@ def catchError(message, arg):
             try:
                 r = function(*args, **kwargs)
             except Exception as e:
-                raise XmlParsingException(message + str(a))
+                raise XmlTranslationException(message + str(a))
             return r
 
         return inner
@@ -23,12 +23,12 @@ def catchError(message, arg):
     return decorator
 
 
-class WidthFirstXmlParser:
+class WidthFirstXmlTranslator:
 
     def __init__(self):
         self.xmlTagService = XmlTagService()
 
-    def parse(self, text):
+    def process(self, text):
         self.text = text
         while self.text.find('<') != -1:
             tagFinder = self._getTagFinder(self.text)
@@ -72,7 +72,7 @@ class WidthFirstXmlParser:
         rbound = text.find('>')
         tag = text[lbound:rbound + 1]
         if tag.count('<') > 1:
-            raise XmlParsingException("Tag '{}' contains '<' within itself.".format(tag))
+            raise XmlTranslationException("Tag '{}' contains '<' within itself.".format(tag))
         return (lbound, rbound, tag)
 
     def _isSingular(self, tag):
@@ -93,7 +93,7 @@ class CharacaterNormalizer:
             '»': '"'
         }
 
-    def parse(self, text):
+    def process(self, text):
         for k, v in self.notNormalizedDic.items():
             text = text.replace(k, v)
         print text
@@ -102,17 +102,17 @@ class CharacaterNormalizer:
 
 class DuplicateSpaceRemover:
 
-    def parse(self, text):
+    def process(self, text):
         return re.sub(" +", " ", text)
 
 
-class SlideTranslationSystem:
-    parsers = [CharacaterNormalizer(),
-               WidthFirstXmlParser(),
-               DuplicateSpaceRemover()]
+class TextTranslationSystem:
+    textProcessors = [CharacaterNormalizer(),
+                      WidthFirstXmlTranslator(),
+                      DuplicateSpaceRemover()]
 
     @staticmethod
-    def translate(slideText):
-        for parser in SlideTranslationSystem.parsers:
-            slideText = parser.parse(slideText)
-        return slideText
+    def translate(text):
+        for processor in TextTranslationSystem.textProcessors:
+            text = processor.process(text)
+        return text
