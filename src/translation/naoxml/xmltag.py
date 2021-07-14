@@ -42,7 +42,7 @@ class XmlTag:
 
     def getEndTag(self):
         fulltag = self.tag
-        if fulltag.contains('<') < 2:
+        if fulltag.count('<') < 2:
             raise XmlTranslationException("Cannot extract end from:{}".format(fulltag))
         lbound = fulltag.rfind('<')
         rbound = fulltag.rfind('>')
@@ -56,3 +56,21 @@ class XmlTag:
         srbound = fulltag.find('>')
         elbound = fulltag.rfind('<')
         return fulltag[srbound + 1:elbound]
+
+    def getChildrenTags(self):
+        from xmlfinder import XmlFinder
+        xmlFinder = XmlFinder()
+        tags = []
+        content = self.getTagContent()
+        while content.find('<') != -1:
+            l, r, t = xmlFinder.findXmlTag(content)
+            tags.append(XmlTag(t))
+            content = content[r + 1:]
+        return tags
+
+    def __repr__(self):
+        if self.isSingular():
+            return "'{}'".format(self.getStartTag())
+        content = self.getTagContent()
+        text = "..." if len(content) > 5 else content
+        return "'{}{}{}'".format(self.getStartTag(), text, self.getEndTag())
