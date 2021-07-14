@@ -1,8 +1,8 @@
 TAGS:
-    <do> - for executing animations:
+    <do[/]> - for executing animations:
         animation (MANDATORY) - path to animation to execute (dependent on animation-ns)
         == ^start(path)
-    <do/> - wait for animation to finish
+    </do> - wait for animation to finish
 
     <set/> - user for settings semi global values:
         animation-ns (OPTIONAL) -  folder path to use for finding animations.
@@ -15,7 +15,7 @@ TAGS:
 
     <rspd[/]> - set reading speed:
         speed (MANDATORY) - reading speed
-    <rspd/> -set reading speed back to default (100)
+    </rspd> -set reading speed back to default (100)
 
     <emph/> - set emphasis for word:
         word (MANDATORY) - word to use
@@ -23,16 +23,19 @@ TAGS:
     
     <vol[/]> - set volume:
         value (MANDATORY) - volume
-    <vol/> - set volume to default (100)
+    </vol> - set volume to default (100)
 
     <rmode[/]> - set reading mode:
         mode (MANDATORY, word/sent/char) - reading mode to use 
-    <rmode/> - set reading mode to default (sentence)
+    </rmode> - set reading mode to default (sentence)
 
     <rst/> - set default to all parametrs
 
+    <video[/]>
+    </video>
+
     <stext> - идея просто пушка, БОМБА НАХУЙ я бы сказал. Просто сделать парсер для парсера который парсит в парсер. План ахуенный, я за.
-    <stext/> - Устал парситься и хайпиться, переходи на более низкий уровень парсинга. Ну ничего, скоро на ассемблере будешь писать GLHF
+    </stext> - Устал парситься и хайпиться, переходи на более низкий уровень парсинга. Ну ничего, скоро на ассемблере будешь писать GLHF
 
 
 
