@@ -17,7 +17,7 @@ class WidthFirstXmlTranslator:
             l, r, t = self.xmlFinder.findXmlTag(self.text)
             t = self.xmlTagService.translateTag(t)
             self._replace(l, r, t)
-        return self.text
+        return self.text.replace("{split}","<split/>")
 
     def _replace(self, lbound, rbound, replacement):
         self.text = self.text[:lbound] + replacement + self.text[rbound + 1:]

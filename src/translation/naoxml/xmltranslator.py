@@ -158,4 +158,5 @@ xmltags = {
     "rmode": RmodeHandler(),
     "rst": rstHandler,
     "video": VideoHandler(),
+    "split": lambda x: " {split} "
 }

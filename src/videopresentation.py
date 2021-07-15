@@ -10,7 +10,10 @@ class VideoPresentation:
 
     def __call__(self, COMContext):
         ss = COMContext["slideshow"]
-        pl = ss.View.Player(self._getVideoShape(ss.View.Slide))
+        sh = self._getVideoShape(ss.View.Slide)
+        time.sleep(ss.View.Slide.SlideShowTransition.Duration)
+        pl = ss.View.Player(sh.Id)
+
         pl.Play()
         while pl.State == 0:
             time.sleep(0.5)

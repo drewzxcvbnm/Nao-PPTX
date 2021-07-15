@@ -27,5 +27,6 @@ class ThreadEventExecutor:
         self.loop = False
 
     def _initContext(self):
+        pythoncom.CoInitialize()
         for name, id in self.COMContext.items():
             self.COMContext[name] = win32com.client.Dispatch(pythoncom.CoGetInterfaceAndReleaseStream(id, pythoncom.IID_IDispatch))
