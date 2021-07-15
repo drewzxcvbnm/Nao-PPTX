@@ -1,4 +1,6 @@
+# coding=utf-8
 import re
+
 from xmltranslationexception import XmlTranslationException
 
 
@@ -9,7 +11,7 @@ class XmlTag:
         self.str = tagAsStr
 
     def getTagName(self):
-        tag = self.tag
+        tag = self.getStartTag()
         if ' ' in tag:
             return tag[1: tag.find(' ')]
         return re.sub("(<|>|/)", "", tag)
@@ -52,7 +54,8 @@ class XmlTag:
     def getTagContent(self):
         fulltag = self.tag
         if fulltag.count('<') < 2:
-            raise XmlTranslationException("Cannot extract content from:{}".format(fulltag))
+            # raise XmlTranslationException("Cannot extract content from:{}".format(fulltag))
+            return None
         srbound = fulltag.find('>')
         elbound = fulltag.rfind('<')
         return fulltag[srbound + 1:elbound]
@@ -67,6 +70,17 @@ class XmlTag:
             tags.append(XmlTag(t))
             content = content[r + 1:]
         return tags
+
+    def getTranslatedContent(self):
+        from xmltranslator import XmlTagService
+        xmlTagService = XmlTagService()
+        if self.isSingular():
+            return xmlTagService.translateTag(self.str)
+        children = {t.str: t for t in self.getChildrenTags()}.values()
+        content = self.getTagContent()
+        for child in children:
+            content = content.replace(child.str, child.getTranslatedContent())
+        return XmlTag(xmlTagService.translateTag(self.getStartTag() + content + self.getEndTag())).getTagContent()
 
     def __repr__(self):
         if self.isSingular():

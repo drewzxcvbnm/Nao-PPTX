@@ -19,7 +19,8 @@ class XmlTagService:
         tag = XmlTag(tag)
         name = tag.getTagName()
         if name not in xmltags.keys():
-            raise XmlTranslationException("Cannot translate tag {}:{}".format(name, tag.str))
+            return tag.str
+            # raise XmlTranslationException("Cannot translate tag {}:{}".format(name, tag.str))
         return xmltags[name](tag.str)
 
 
