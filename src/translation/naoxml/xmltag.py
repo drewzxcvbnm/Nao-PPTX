@@ -54,8 +54,7 @@ class XmlTag:
     def getTagContent(self):
         fulltag = self.tag
         if fulltag.count('<') < 2:
-            # raise XmlTranslationException("Cannot extract content from:{}".format(fulltag))
-            return None
+            raise XmlTranslationException("Cannot extract content from:{}".format(fulltag))
         srbound = fulltag.find('>')
         elbound = fulltag.rfind('<')
         return fulltag[srbound + 1:elbound]
@@ -71,7 +70,7 @@ class XmlTag:
             content = content[r + 1:]
         return tags
 
-    def getTranslatedContent(self):
+    def getTranslatedTagAsString(self):
         from xmltranslator import XmlTagService
         xmlTagService = XmlTagService()
         if self.isSingular():
@@ -79,8 +78,8 @@ class XmlTag:
         children = {t.str: t for t in self.getChildrenTags()}.values()
         content = self.getTagContent()
         for child in children:
-            content = content.replace(child.str, child.getTranslatedContent())
-        return XmlTag(xmlTagService.translateTag(self.getStartTag() + content + self.getEndTag())).getTagContent()
+            content = content.replace(child.str, child.getTranslatedTagAsString())
+        return xmlTagService.translateTag(self.getStartTag() + content + self.getEndTag())
 
     def __repr__(self):
         if self.isSingular():

@@ -5,22 +5,22 @@ from naoxml.xmlfinder import XmlFinder
 import re
 
 
-class WidthFirstXmlTranslator:
+class XmlTranslator:
 
     def __init__(self):
         self.xmlTagService = XmlTagService()
         self.xmlFinder = XmlFinder()
 
     def process(self, text):
-        self.text = text
-        while self.text.find('<') != -1:
-            l, r, t = self.xmlFinder.findXmlTag(self.text)
-            t = self.xmlTagService.translateTag(t)
-            self._replace(l, r, t)
-        return self.text.replace("{split}","<split/>")
+        r = XmlTag(XmlTag(self._xmlwrap(text)).getTranslatedTagAsString())
+        if r.getTagName() == "temptag":
+            return r.getTagContent()
+        return r.str
 
-    def _replace(self, lbound, rbound, replacement):
-        self.text = self.text[:lbound] + replacement + self.text[rbound + 1:]
+    def _xmlwrap(self, text):
+        if text[0] == '<':
+            return text
+        return "<temptag>" + text + "</temptag>"
 
 
 class CharacaterNormalizer:
@@ -35,7 +35,6 @@ class CharacaterNormalizer:
     def process(self, text):
         for k, v in self.notNormalizedDic.items():
             text = text.replace(k, v)
-        print text
         return text
 
 
@@ -47,7 +46,7 @@ class DuplicateSpaceRemover:
 
 class TextTranslationSystem:
     textProcessors = [CharacaterNormalizer(),
-                      WidthFirstXmlTranslator(),
+                      XmlTranslator(),
                       DuplicateSpaceRemover()]
 
     @staticmethod
