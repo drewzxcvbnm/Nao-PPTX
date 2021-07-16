@@ -15,7 +15,7 @@ class VideoPresentation:
         pl = ss.View.Player(sh.Id)
 
         pl.Play()
-        while pl.State == 0:
+        while pl.State != 2:
             time.sleep(0.5)
         self.slidePresentor.ongoingEvents.remove(self)
 
