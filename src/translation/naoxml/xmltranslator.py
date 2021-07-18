@@ -28,8 +28,8 @@ class DoHandler:
     def __call__(self, tag):
         tag = XmlTag(tag)
         self.attrs = tag.getAttributes()
-        if tag.str.count('<') == 1:
-            return self._handleStartTag()
+        if tag.isSingular() == 1:
+            return self._handleStartTag() + self._handleEndTag()
         return self._handleStartTag() + tag.getTagContent() + self._handleEndTag()
 
     def _handleStartTag(self):
@@ -131,17 +131,17 @@ def rstHandler(tag):
     return " \\rst\\ "
 
 
-class VideoHandler:
+class MediaHandler:
 
     def __call__(self, tag):
         tag = XmlTag(tag)
         self.attrs = tag.getAttributes()
         if tag.isSingular():
-            return " $event=startvideo <split/> "
+            return " $event=startmedia <split/> "
         return self._handleStartTag() + tag.getTagContent() + self._handleEndTag()
 
     def _handleStartTag(self):
-        return " $event=startvideo "
+        return " $event=startmedia "
 
     def _handleEndTag(self):
         return " <split/> "
@@ -157,6 +157,6 @@ xmltags = {
     "vol": VolHandler(),
     "rmode": RmodeHandler(),
     "rst": rstHandler,
-    "video": VideoHandler(),
-    "split": lambda x: " {split} "
+    "video": MediaHandler(),
+    "audio": MediaHandler()
 }

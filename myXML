@@ -1,7 +1,7 @@
 TAGS:
     <do[/]> - for executing animations:
         animation (MANDATORY) - path to animation to execute (dependent on animation-ns)
-        == ^start(path)
+        == ^start(path) ^wait(path)
     </do> - wait for animation to finish
 
     <set/> - user for settings semi global values:
@@ -31,8 +31,10 @@ TAGS:
 
     <rst/> - set default to all parametrs
 
-    <video[/]>
-    </video>
+    <video[/]> - start video playback
+    </video> - wait for end of video playback
+    <audio[/]> - alias for video tag
+    </audio>
 
     <stext> - идея просто пушка, БОМБА НАХУЙ я бы сказал. Просто сделать парсер для парсера который парсит в парсер. План ахуенный, я за.
     </stext> - Устал парситься и хайпиться, переходи на более низкий уровень парсинга. Ну ничего, скоро на ассемблере будешь писать GLHF

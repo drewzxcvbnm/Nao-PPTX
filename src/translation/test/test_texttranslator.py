@@ -21,7 +21,7 @@ So, how do I work? ^start(/test/anim) It’s ^start(/another/test) quite ^wait(/
 This computer works like a human brain, but with a lot of limitations and a lack of conscience,
 and I am only capable of doing what was programmed into me and \pau=150\ nothing more. So unfortunately \pau=100\ I can’t
 conquer the world without human approval, \emph=2\ for now \pau=150\ that is.
- $event=startvideo The Era of machines is upon <tt/> us Humans! <split/> Now gettings back to the topic at hand!
+ $event=startmedia The Era of machines is upon <tt/> us Humans! <split/> Now gettings back to the topic at hand!
 """
         self.assertEquals(result, expected)
 

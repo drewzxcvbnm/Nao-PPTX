@@ -6,7 +6,7 @@ import qi, win32com
 import pythoncom
 from eventmap import eventmap
 from translation.texttranslator import TextTranslationSystem
-from videopresentation import VideoPresentation
+from mediapresentation import MediaPresentation
 
 
 class SlidePresentor:
@@ -19,7 +19,7 @@ class SlidePresentor:
         executor2 = ThreadEventExecutor(
             slideshow=pythoncom.CoMarshalInterThreadInterfaceInStream(pythoncom.IID_IDispatch, slideShow))
         eventmap["next"] = lambda: executor.addEventToQueue(self._next)
-        eventmap["startvideo"] = lambda: executor2.addEventToQueue(VideoPresentation(self))
+        eventmap["startmedia"] = lambda: executor2.addEventToQueue(MediaPresentation(self))
 
     def readSlide(self, slide):
         textNote = slide.notes_slide.notes_text_frame.text
