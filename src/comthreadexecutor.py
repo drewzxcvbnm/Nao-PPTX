@@ -5,7 +5,7 @@ import pythoncom
 import win32com
 
 
-class ThreadEventExecutor:
+class COMThreadExecutor:
 
     def __init__(self, **COMContext):
         self.eventQueue = deque()
@@ -13,7 +13,7 @@ class ThreadEventExecutor:
         self.loop = True
         Thread(target=self._run).start()
 
-    def addEventToQueue(self, func):
+    def addFunctionToQueue(self, func):
         self.eventQueue.append(func)
 
     def _run(self):
@@ -29,4 +29,5 @@ class ThreadEventExecutor:
     def _initContext(self):
         pythoncom.CoInitialize()
         for name, id in self.COMContext.items():
-            self.COMContext[name] = win32com.client.Dispatch(pythoncom.CoGetInterfaceAndReleaseStream(id, pythoncom.IID_IDispatch))
+            self.COMContext[name] = win32com.client.Dispatch(
+                pythoncom.CoGetInterfaceAndReleaseStream(id, pythoncom.IID_IDispatch))

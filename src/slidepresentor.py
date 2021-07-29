@@ -1,7 +1,7 @@
 import time
 
 from services import atts, tts, session, mem
-from threadeventexecutor import ThreadEventExecutor
+from comthreadexecutor import COMThreadExecutor
 import qi, win32com
 import pythoncom
 from eventmap import eventmap
@@ -14,12 +14,12 @@ class SlidePresentor:
     def __init__(self, slideShow):
         self.slideShow = slideShow
         self.ongoingEvents = []
-        executor = ThreadEventExecutor(
+        executor = COMThreadExecutor(
             slideshow=pythoncom.CoMarshalInterThreadInterfaceInStream(pythoncom.IID_IDispatch, slideShow))
-        executor2 = ThreadEventExecutor(
+        executor2 = COMThreadExecutor(
             slideshow=pythoncom.CoMarshalInterThreadInterfaceInStream(pythoncom.IID_IDispatch, slideShow))
-        eventmap["next"] = lambda: executor.addEventToQueue(self._next)
-        eventmap["startmedia"] = lambda: executor2.addEventToQueue(MediaPresentation(self))
+        eventmap["next"] = lambda: executor.addFunctionToQueue(self._next)
+        eventmap["startmedia"] = lambda: executor2.addFunctionToQueue(MediaPresentation(self))
 
     def readSlide(self, slide):
         textNote = slide.notes_slide.notes_text_frame.text

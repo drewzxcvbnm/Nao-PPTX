@@ -1,4 +1,4 @@
-from xmltranslationexception import XmlTranslationException
+from xmlexceptions import XmlTranslationException
 from xmltag import XmlTag
 
 
@@ -36,14 +36,14 @@ class XmlFinder:
 
     @catchError("Error finding end tag for:", 1)
     def _getEndTag(self, stag, tagFinder):
-        stagName = XmlTag(stag).getTagName()
+        stagName = XmlTag(stag).tag_name
         numToFind = 1
         l, r, tag = None, None, None
         while numToFind > 0:
             l, r, tag = next(tagFinder)
             if self._isValidEndTag(stag, tag):
                 numToFind -= 1
-            elif XmlTag(tag).getTagName() == stagName and not self._isSingular(tag):
+            elif XmlTag(tag).tag_name == stagName and not self._isSingular(tag):
                 numToFind += 1
         return l, r, tag
 
@@ -70,6 +70,6 @@ class XmlFinder:
         return tag[-2] == '/'
 
     def _isValidEndTag(self, startTag, endTag):
-        startName = XmlTag(startTag).getTagName()
-        endName = XmlTag(endTag).getTagName()
+        startName = XmlTag(startTag).tag_name
+        endName = XmlTag(endTag).tag_name
         return startName == endName and endTag[1] == '/'

@@ -1,3 +1,5 @@
+// vim: set ft=xml:
+
 TAGS:
     <do[/]> - for executing animations:
         animation (MANDATORY) - path to animation to execute (dependent on animation-ns)
@@ -39,11 +41,50 @@ TAGS:
     <stext> - идея просто пушка, БОМБА НАХУЙ я бы сказал. Просто сделать парсер для парсера который парсит в парсер. План ахуенный, я за.
     </stext> - Устал парситься и хайпиться, переходи на более низкий уровень парсинга. Ну ничего, скоро на ассемблере будешь писать GLHF
 
+	<startsurvey[/]> - creates and opens survey
+		id (MANDATORY) -  id of survey to start
+	</startsurvey> - waits till end of survey
 
 
+Survey example:
+	<survey id="2">
+		<pin>0A2X</pin>
+		<type>auto</type>
+		<questions>
+			<question>
+				<q>What is the first letter of the english alphabet?</q>
+				<validoption>1</validoption>
+				<options>
+					<o>A</o>
+					<o>B</o>
+					<o>C</o>
+				</options>
+			</question>
+			<question>
+				<q>What is the second letter?</q>
+				<timelimit>10</timelimit>
+				<validoption>2</validoption>
+				<options>
+					<o>Z</o>
+					<o>B</o>
+					<o>O</o>
+				</options>
+			</question>
+			<question>
+				<q>What is the Last letter?</q>
+				<timelimit>50</timelimit>
+				<validoption>1</validoption>
+				<options>
+					<o>Z</o>
+					<o>B</o>
+					<o>O</o>
+				</options>
+			</question>
+		</questions>
+	</survey>
 
-<do Monster_1 = ^start(..)
-<\do ...> = ^start(..)
 
-a = aboba
-as = abobus
+Do example:
+		<do Monster_1 = ^start(..)>
+		<\do ...> = ^start(..)
+

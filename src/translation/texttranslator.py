@@ -1,5 +1,5 @@
 # coding=utf-8
-from naoxml.xmltranslator import XmlTagService, XmlTranslationException
+from naoxml.xmltranslator import XmlTagService
 from naoxml.xmltag import XmlTag
 from naoxml.xmlfinder import XmlFinder
 import re
@@ -12,9 +12,9 @@ class XmlTranslator:
         self.xmlFinder = XmlFinder()
 
     def process(self, text):
-        r = XmlTag(XmlTag(self._xmlwrap(text)).getTranslatedTagAsString())
-        if r.getTagName() == "temptag":
-            return r.getTagContent()
+        r = XmlTag(XmlTag(self._xmlwrap(text)).get_translated_tag_as_string())
+        if r.tag_name == "temptag":
+            return r.content
         return r.str
 
     def _xmlwrap(self, text):
