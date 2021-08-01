@@ -1,19 +1,14 @@
 import qi
-from services import asr, alife, posture
+from services import asr, alife, posture, args
 import preader
 import sys
 import pythoncom
 
-def main():
+if __name__ == '__main__':
     asr.pause(1)
     alife.setState("safeguard")
-    path = r"C:\Users\tsi_nao\Desktop\Nao-PPTX\presentations\naoPPTX.pptx"
+    path = args.pr
     pr = preader.PresentationReader(path)
     pr.readSlides()
     pr.close()
     sys.exit(0)
-
-
-
-main()
-
