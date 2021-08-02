@@ -32,7 +32,7 @@ class PresentationReader:
             Event(self._nextSlide, [], binaryPredicate(lambda: touch.getStatus()[7][1], False, True)))
         self.eventHandler.addEvent(
             Event(self._prevSlide, [], binaryPredicate(lambda: touch.getStatus()[9][1], False, True)))
-        self.slideReader = SlidePresentor(self.slideShow)
+        self.slideReader = SlidePresentor(self.slideShow, self.presentation_id)
 
     def readSlides(self):
         self.ppt = Presentation(self.path)

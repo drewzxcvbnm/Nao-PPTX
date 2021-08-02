@@ -5,15 +5,15 @@ import pythoncom
 import win32com
 
 
-class COMThreadExecutor:
+class COMThreadEventExecutor:
 
-    def __init__(self, **COMContext):
+    def __init__(self, **com_context):
         self.eventQueue = deque()
-        self.COMContext = COMContext
+        self.COMContext = com_context
         self.loop = True
         Thread(target=self._run).start()
 
-    def addFunctionToQueue(self, func):
+    def add_event_to_queue(self, func):
         self.eventQueue.append(func)
 
     def _run(self):

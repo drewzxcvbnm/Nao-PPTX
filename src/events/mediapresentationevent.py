@@ -2,7 +2,7 @@ import pythoncom
 import time
 
 
-class MediaPresentation:
+class MediaPresentationEvent:
 
     def __init__(self, slidePresentor):
         self.slidePresentor = slidePresentor

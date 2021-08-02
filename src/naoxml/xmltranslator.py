@@ -154,6 +154,22 @@ def survey_handler(tag):
     return ""
 
 
+class SurveyStartHandler:
+
+    def __call__(self, tag):
+        self.tag = XmlTag(tag)
+        self.attrs = tag.attributes
+        if tag.is_singular():
+            return self._handle_start_tag() + self._handle_end_tag()
+        return self._handle_start_tag() + tag.content + self._handle_end_tag()
+
+    def _handle_start_tag(self):
+        return " $event=startsurvey_{} ".format(self.tag.attributes['id'])
+
+    def _handle_end_tag(self):
+        return " <split/> "
+
+
 xmltags = {
     "do": DoHandler(),
     "next": nextHandler,
@@ -165,5 +181,7 @@ xmltags = {
     "rmode": RmodeHandler(),
     "rst": rstHandler,
     "video": MediaHandler(),
-    "audio": MediaHandler()
+    "audio": MediaHandler(),
+    "survey": survey_handler,
+    "startsurvey": SurveyStartHandler()
 }

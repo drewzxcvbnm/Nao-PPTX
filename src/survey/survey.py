@@ -1,6 +1,6 @@
 from naoxml.xmltagvalidator import XmlTagValidator
 
-# id -> Survey Object
+# local id -> Survey Object
 surveys = {}
 
 
@@ -9,11 +9,14 @@ class Survey:
 
     def __init__(self, survey_xmltag):
         XmlTagValidator.validate(survey_xmltag, self.mandatory_fields)
+        self.remote_id = None
+        self.local_sid = survey_xmltag.attributes['id']
         self.type = survey_xmltag.get_child_tag_content('type')
         self.pin = survey_xmltag.get_child_tag_content('pin')
         self.questions = self._questions(survey_xmltag.get_child_tag('questions'))
 
-    def _questions(self, questions_tag):
+    @staticmethod
+    def _questions(questions_tag):
         questions = []
         for ques in questions_tag.get_child_tag('question'):
             options = [op.get_child_tag_content('o') for op in ques.get_child_tag('options').get_child_tag('option')]
