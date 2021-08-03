@@ -158,10 +158,10 @@ class SurveyStartHandler:
 
     def __call__(self, tag):
         self.tag = XmlTag(tag)
-        self.attrs = tag.attributes
-        if tag.is_singular():
+        self.attrs = self.tag.attributes
+        if self.tag.is_singular():
             return self._handle_start_tag() + self._handle_end_tag()
-        return self._handle_start_tag() + tag.content + self._handle_end_tag()
+        return self._handle_start_tag() + self.tag.content + self._handle_end_tag()
 
     def _handle_start_tag(self):
         return " $event=startsurvey_{} ".format(self.tag.attributes['id'])

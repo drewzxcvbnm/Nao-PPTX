@@ -19,7 +19,7 @@ class Survey:
     def _questions(questions_tag):
         questions = []
         for ques in questions_tag.get_child_tag('question'):
-            options = [op.get_child_tag_content('o') for op in ques.get_child_tag('options').get_child_tag('o')]
+            options = [op.content for op in ques.get_child_tag('options').get_child_tag('o')]
             question = {"question": ques.get_child_tag_content('q'), "options": options}
             if ques.get_child_tag_content('validoption') is not None:
                 question['validOption'] = ques.get_child_tag_content('validOption')
