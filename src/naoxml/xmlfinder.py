@@ -2,7 +2,7 @@ from xmlexceptions import XmlTranslationException
 from xmltag import XmlTag
 
 
-def catchError(message, arg):
+def catch_error(message, arg):
     def decorator(function):
         def inner(*args, **kwargs):
             a = None
@@ -23,34 +23,37 @@ def catchError(message, arg):
 
 class XmlFinder:
 
-    def findXmlTag(self, text):
+    def __init__(self):
+        pass
+
+    def find_xml_tag(self, text):
         self.text = text
         while self.text.find('<') != -1:
-            tagFinder = self._getTagFinder(self.text)
-            l1, r1, stag = next(tagFinder)
-            if self._isSingular(stag):
+            tag_finder = self._get_tag_finder(self.text)
+            l1, r1, stag = next(tag_finder)
+            if self._is_singular(stag):
                 return l1, r1, stag
-            l2, r2, etag = self._getEndTag(stag, tagFinder)
+            l2, r2, etag = self._get_end_tag(stag, tag_finder)
             tag = self.text[l1:r2 + 1]
             return l1, r2, tag
 
-    @catchError("Error finding end tag for:", 1)
-    def _getEndTag(self, stag, tagFinder):
-        stagName = XmlTag(stag).tag_name
-        numToFind = 1
+    @catch_error("Error finding end tag for:", 1)
+    def _get_end_tag(self, stag, tag_finder):
+        stag_name = XmlTag(stag).tag_name
+        num_to_find = 1
         l, r, tag = None, None, None
-        while numToFind > 0:
-            l, r, tag = next(tagFinder)
-            if self._isValidEndTag(stag, tag):
-                numToFind -= 1
-            elif XmlTag(tag).tag_name == stagName and not self._isSingular(tag):
-                numToFind += 1
+        while num_to_find > 0:
+            l, r, tag = next(tag_finder)
+            if self._is_valid_end_tag(stag, tag):
+                num_to_find -= 1
+            elif XmlTag(tag).tag_name == stag_name and not self._is_singular(tag):
+                num_to_find += 1
         return l, r, tag
 
-    def _getTagFinder(self, text):
+    def _get_tag_finder(self, text):
         texti = 0
         while text.find('<') != -1:
-            l, r, t = self._findTag(text)
+            l, r, t = self._find_tag(text)
             text = text[r + 1:]
             yield l + texti, r + texti, t
             texti += r + 1
@@ -58,7 +61,7 @@ class XmlFinder:
     def _replace(self, lbound, rbound, replacement):
         self.text = self.text[:lbound] + replacement + self.text[rbound + 1:]
 
-    def _findTag(self, text):
+    def _find_tag(self, text):
         lbound = text.find('<')
         rbound = text.find('>')
         tag = text[lbound:rbound + 1]
@@ -66,10 +69,10 @@ class XmlFinder:
             raise XmlTranslationException("Tag '{}' contains '<' within itself.".format(tag))
         return (lbound, rbound, tag)
 
-    def _isSingular(self, tag):
+    def _is_singular(self, tag):
         return tag[-2] == '/'
 
-    def _isValidEndTag(self, startTag, endTag):
-        startName = XmlTag(startTag).tag_name
-        endName = XmlTag(endTag).tag_name
-        return startName == endName and endTag[1] == '/'
+    def _is_valid_end_tag(self, start_tag, end_tag):
+        start_name = XmlTag(start_tag).tag_name
+        end_name = XmlTag(end_tag).tag_name
+        return start_name == end_name and end_tag[1] == '/'

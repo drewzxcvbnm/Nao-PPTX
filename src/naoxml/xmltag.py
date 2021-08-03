@@ -79,11 +79,11 @@ class XmlTag:
     @cached_children
     def child_tags(self):
         from xmlfinder import XmlFinder
-        xmlFinder = XmlFinder()
+        xml_finder = XmlFinder()
         tags = []
         content = self.content
         while content.find('<') != -1:
-            l, r, t = xmlFinder.findXmlTag(content)
+            l, r, t = xml_finder.find_xml_tag(content)
             tags.append(XmlTag(t))
             content = content[r + 1:]
         return tags
@@ -107,12 +107,12 @@ class XmlTag:
         from xmltranslator import XmlTagService
         xml_tag_service = XmlTagService()
         if self.is_singular():
-            return xml_tag_service.translateTag(self.str)
+            return xml_tag_service.translate_tag(self.str)
         children = {t.str: t for t in self.child_tags}.values()
         content = self.content
         for child in children:
             content = content.replace(child.str, child.get_translated_tag_as_string())
-        return xml_tag_service.translateTag(self.start_tag + content + self.end_tag)
+        return xml_tag_service.translate_tag(self.start_tag + content + self.end_tag)
 
     def __repr__(self):
         if self.is_singular():

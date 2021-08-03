@@ -2,13 +2,12 @@ from xmlexceptions import XmlTranslationException
 from xmltag import XmlTag
 from survey.survey import Survey, surveys
 
-xmltags = {}
 animationNamespace = None
 
 
-def StrToXmlTag(function):
-    def wrapper(tagAsStr):
-        tag = XmlTag(tagAsStr)
+def str_to_xml_tag(function):
+    def wrapper(tag_as_str):
+        tag = XmlTag(tag_as_str)
         return function(tag)
 
     return wrapper
@@ -16,7 +15,7 @@ def StrToXmlTag(function):
 
 class XmlTagService:
 
-    def translateTag(self, tag):
+    def translate_tag(self, tag):
         tag = XmlTag(tag)
         name = tag.tag_name
         if name not in xmltags.keys():
@@ -30,32 +29,32 @@ class DoHandler:
         tag = XmlTag(tag)
         self.attrs = tag.attributes
         if tag.is_singular() == 1:
-            return self._handleStartTag() + self._handleEndTag()
-        return self._handleStartTag() + tag.content + self._handleEndTag()
+            return self._handle_start_tag() + self._handle_end_tag()
+        return self._handle_start_tag() + tag.content + self._handle_end_tag()
 
-    def _handleStartTag(self):
-        givenPath = self.attrs["animation"]
-        path = givenPath if animationNamespace is None else animationNamespace + givenPath
+    def _handle_start_tag(self):
+        given_path = self.attrs["animation"]
+        path = given_path if animationNamespace is None else animationNamespace + given_path
         return "^start({}) ".format(path)
 
-    def _handleEndTag(self):
-        givenPath = self.attrs["animation"]
-        path = givenPath if animationNamespace is None else animationNamespace + givenPath
+    def _handle_end_tag(self):
+        given_path = self.attrs["animation"]
+        path = given_path if animationNamespace is None else animationNamespace + given_path
         return " ^wait({}) ".format(path)
 
 
-def nextHandler(tag):
+def next_handler(tag):
     return " $event=next "
 
 
-@StrToXmlTag
-def pauseHandler(tag):
+@str_to_xml_tag
+def pause_handler(tag):
     attrs = tag.attributes
     return " \\pau={}\\ ".format(attrs.get('time', 100))
 
 
-@StrToXmlTag
-def emphHandler(tag):
+@str_to_xml_tag
+def emph_handler(tag):
     attrs = tag.attributes
     if "word" not in attrs.keys():
         raise XmlTranslationException("Emph tag. Missing 'word' attribute")
@@ -64,8 +63,8 @@ def emphHandler(tag):
     return " \\emph={}\\ {} ".format(attrs["pos"], attrs["word"])
 
 
-@StrToXmlTag
-def setHandler(tag):
+@str_to_xml_tag
+def set_handler(tag):
     attrs = tag.attributes
     ret = ""
     if "voice" in attrs.keys():
@@ -82,14 +81,14 @@ class RmodeHandler:
         tag = XmlTag(tag)
         self.attrs = tag.attributes
         if tag.is_singular():
-            return self._handleStartTag()
-        return self._handleStartTag() + tag.content + self._handleEndTag()
+            return self._handle_start_tag()
+        return self._handle_start_tag() + tag.content + self._handle_end_tag()
 
-    def _handleStartTag(self):
+    def _handle_start_tag(self):
         mode = self.attrs["mode"]
         return " \\readmode={}\\ ".format(mode)
 
-    def _handleEndTag(self):
+    def _handle_end_tag(self):
         return " \\readmode=sent\\ "
 
 
@@ -99,14 +98,14 @@ class VolHandler:
         tag = XmlTag(tag)
         self.attrs = tag.attributes
         if tag.is_singular():
-            return self._handleStartTag()
-        return self._handleStartTag() + tag.content + self._handleEndTag()
+            return self._handle_start_tag()
+        return self._handle_start_tag() + tag.content + self._handle_end_tag()
 
-    def _handleStartTag(self):
+    def _handle_start_tag(self):
         value = self.attrs["value"]
         return " \\vol={}\\ ".format(value)
 
-    def _handleEndTag(self):
+    def _handle_end_tag(self):
         return " \\vol=100\\ "
 
 
@@ -116,19 +115,19 @@ class RspdHandler:
         tag = XmlTag(tag)
         self.attrs = tag.attributes
         if tag.is_singular():
-            return self._handleStartTag()
-        return self._handleStartTag() + tag.content + self._handleEndTag()
+            return self._handle_start_tag()
+        return self._handle_start_tag() + tag.content + self._handle_end_tag()
 
-    def _handleStartTag(self):
+    def _handle_start_tag(self):
         speed = self.attrs["speed"]
         return " \\rspd={}\\ ".format(speed)
 
-    def _handleEndTag(self):
+    def _handle_end_tag(self):
         return " \\rspd=100\\ "
 
 
-@StrToXmlTag
-def rstHandler(tag):
+@str_to_xml_tag
+def rst_handler(tag):
     return " \\rst\\ "
 
 
@@ -139,22 +138,25 @@ class MediaHandler:
         self.attrs = tag.attributes
         if tag.is_singular():
             return " $event=startmedia <split/> "
-        return self._handleStartTag() + tag.content + self._handleEndTag()
+        return self._handle_start_tag() + tag.content + self._handle_end_tag()
 
-    def _handleStartTag(self):
+    def _handle_start_tag(self):
         return " $event=startmedia "
 
-    def _handleEndTag(self):
+    def _handle_end_tag(self):
         return " <split/> "
 
 
-@StrToXmlTag
+@str_to_xml_tag
 def survey_handler(tag):
     surveys[tag.attributes['id']] = Survey(tag)
     return ""
 
 
 class SurveyStartHandler:
+
+    def __init__(self):
+        pass
 
     def __call__(self, tag):
         self.tag = XmlTag(tag)
@@ -172,14 +174,14 @@ class SurveyStartHandler:
 
 xmltags = {
     "do": DoHandler(),
-    "next": nextHandler,
-    "pause": pauseHandler,
-    "emph": emphHandler,
-    "set": setHandler,
+    "next": next_handler,
+    "pause": pause_handler,
+    "emph": emph_handler,
+    "set": set_handler,
     "rspd": RspdHandler(),
     "vol": VolHandler(),
     "rmode": RmodeHandler(),
-    "rst": rstHandler,
+    "rst": rst_handler,
     "video": MediaHandler(),
     "audio": MediaHandler(),
     "survey": survey_handler,

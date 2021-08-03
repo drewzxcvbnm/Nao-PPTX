@@ -17,7 +17,8 @@ class XmlTranslator:
             return r.content
         return r.str
 
-    def _xmlwrap(self, text):
+    @staticmethod
+    def _xmlwrap(text):
         if text[0] == '<':
             return text
         return "<temptag>" + text + "</temptag>"
@@ -40,11 +41,18 @@ class CharacaterNormalizer:
 
 class DuplicateSpaceRemover:
 
-    def process(self, text):
+    def __init__(self):
+        pass
+
+    @staticmethod
+    def process(text):
         return re.sub(" +", " ", text)
 
 
 class TextTranslationSystem:
+    def __init__(self):
+        pass
+
     textProcessors = [CharacaterNormalizer(),
                       XmlTranslator(),
                       DuplicateSpaceRemover()]

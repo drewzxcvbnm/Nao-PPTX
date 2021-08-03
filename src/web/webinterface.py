@@ -5,6 +5,9 @@ import json
 
 
 class WebInterface:
+    def __init__(self):
+        pass
+
     domain = 'www.tsinao.com'
 
     @classmethod

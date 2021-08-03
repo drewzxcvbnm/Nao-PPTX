@@ -29,12 +29,12 @@ class PresentationReader:
         self.eventHandler = Eventloop()
         self.eventHandler.addEvent(Event(self._stop, [], binaryPredicate(lambda: touch.getStatus()[8][1], False, True)))
         self.eventHandler.addEvent(
-            Event(self._nextSlide, [], binaryPredicate(lambda: touch.getStatus()[7][1], False, True)))
+            Event(self._next_slide, [], binaryPredicate(lambda: touch.getStatus()[7][1], False, True)))
         self.eventHandler.addEvent(
-            Event(self._prevSlide, [], binaryPredicate(lambda: touch.getStatus()[9][1], False, True)))
+            Event(self._prev_slide, [], binaryPredicate(lambda: touch.getStatus()[9][1], False, True)))
         self.slideReader = SlidePresentor(self.slideShow, self.presentation_id)
 
-    def readSlides(self):
+    def read_slides(self):
         self.ppt = Presentation(self.path)
         self.iSlide = 0
         self.eventHandler.start()
@@ -42,7 +42,7 @@ class PresentationReader:
             if self.stop:
                 break
             self.slideShow.View.GotoSlide(self.iSlide + 1)
-            self.slideReader.readSlide(self.ppt.slides[self.iSlide])
+            self.slideReader.read_slide(self.ppt.slides[self.iSlide])
             self.iSlide += 1
             time.sleep(1)
 
@@ -56,11 +56,9 @@ class PresentationReader:
         self.stop = True
         tts.stopAll()
 
-    def _nextSlide(self):
-        global tts
+    def _next_slide(self):
         tts.stopAll()
 
-    def _prevSlide(self):
-        global tts
+    def _prev_slide(self):
         self.iSlide -= 2
         tts.stopAll()

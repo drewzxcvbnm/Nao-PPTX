@@ -17,7 +17,7 @@ class COMThreadEventExecutor:
         self.eventQueue.append(func)
 
     def _run(self):
-        self._initContext()
+        self._init_context()
         while self.loop:
             if len(self.eventQueue) != 0:
                 self.eventQueue.popleft()(self.COMContext)
@@ -26,7 +26,7 @@ class COMThreadEventExecutor:
     def stop(self):
         self.loop = False
 
-    def _initContext(self):
+    def _init_context(self):
         pythoncom.CoInitialize()
         for name, id in self.COMContext.items():
             self.COMContext[name] = win32com.client.Dispatch(
