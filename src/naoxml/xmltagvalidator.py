@@ -11,15 +11,16 @@ class XmlTagValidator:
     @classmethod
     def _validate_field(cls, xmltag, field):
         field_path = field.split('.')
-        tag = xmltag
+        tag = [xmltag]
         for f in field_path:
             ch = cls._get_children_from_tag(tag, f)
-            if any(elem in None for elem in ch):
+            if any(elem is None for elem in ch):
                 raise XmlValidationException('Tag:{} is missing field {}'.format(tag, field))
             tag = ch
 
     @classmethod
     def _get_children_from_tag(cls, tag, field):
         if isinstance(tag, list):
-            return [t.get_child_tag(field) for t in tag]
-        return [tag.get_child_tag(field)]
+            # return [t.get_child_tag(field) for t in tag]
+            return [cls._get_children_from_tag(t, field) for t in tag]
+        return tag.get_child_tag(field)

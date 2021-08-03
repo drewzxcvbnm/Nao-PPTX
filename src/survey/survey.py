@@ -5,7 +5,7 @@ surveys = {}
 
 
 class Survey:
-    mandatory_fields = ['type', 'questions.q', 'questions.options.o', ]
+    mandatory_fields = ['type', 'questions.question.q', 'questions.question.options.o', ]
 
     def __init__(self, survey_xmltag):
         XmlTagValidator.validate(survey_xmltag, self.mandatory_fields)
@@ -19,7 +19,7 @@ class Survey:
     def _questions(questions_tag):
         questions = []
         for ques in questions_tag.get_child_tag('question'):
-            options = [op.get_child_tag_content('o') for op in ques.get_child_tag('options').get_child_tag('option')]
+            options = [op.get_child_tag_content('o') for op in ques.get_child_tag('options').get_child_tag('o')]
             question = {"question": ques.get_child_tag_content('q'), "options": options}
             if ques.get_child_tag_content('validoption') is not None:
                 question['validOption'] = ques.get_child_tag_content('validOption')
