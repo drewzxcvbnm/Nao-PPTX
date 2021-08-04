@@ -13,7 +13,7 @@ class XmlTranslator:
 
     def process(self, text):
         r = XmlTag(XmlTag(self._xmlwrap(text)).get_translated_tag_as_string())
-        if r.tag_name == "temptag":
+        if r.name == "temptag":
             return r.content
         return r.str
 

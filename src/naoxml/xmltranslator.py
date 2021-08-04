@@ -17,7 +17,7 @@ class XmlTagService:
 
     def translate_tag(self, tag):
         tag = XmlTag(tag)
-        name = tag.tag_name
+        name = tag.name
         if name not in xmltags.keys():
             return tag.str
         return xmltags[name](tag.str)

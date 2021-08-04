@@ -22,7 +22,7 @@ class XmlTag:
         self.children = None
 
     @property
-    def tag_name(self):
+    def name(self):
         tag = self.start_tag
         if ' ' in tag:
             return tag[1: tag.find(' ')]
@@ -38,7 +38,7 @@ class XmlTag:
     def attributes(self):
         start_tag = self.start_tag
         attrs = {}
-        name = self.tag_name
+        name = self.name
         tag = re.sub("(<|>|{})".format(name), "", start_tag).strip("/").strip(" ")
         if tag == "":
             return attrs
@@ -90,7 +90,7 @@ class XmlTag:
 
     def get_child_tag(self, name):
         ch = self.child_tags
-        res = [i for i in ch if i.tag_name == name]
+        res = [i for i in ch if i.name == name]
         if len(res) == 0:
             return None
         elif len(res) == 1:

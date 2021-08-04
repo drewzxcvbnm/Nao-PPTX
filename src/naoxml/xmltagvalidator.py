@@ -1,5 +1,5 @@
 from xmlexceptions import XmlValidationException
-
+from general import flatlist
 
 class XmlTagValidator:
 
@@ -13,9 +13,9 @@ class XmlTagValidator:
         field_path = field.split('.')
         tag = [xmltag]
         for f in field_path:
-            ch = cls._get_children_from_tag(tag, f)
+            ch = flatlist(cls._get_children_from_tag(tag, f))
             if any(elem is None for elem in ch):
-                raise XmlValidationException('Tag:{} is missing field {}'.format(tag, field))
+                raise XmlValidationException('[{}]: Tag {} is missing field'.format(field, tag[0].name))
             tag = ch
 
     @classmethod
@@ -23,4 +23,4 @@ class XmlTagValidator:
         if isinstance(tag, list):
             # return [t.get_child_tag(field) for t in tag]
             return [cls._get_children_from_tag(t, field) for t in tag]
-        return tag.get_child_tag(field)
+        return [tag.get_child_tag(field)]

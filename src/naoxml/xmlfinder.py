@@ -39,14 +39,14 @@ class XmlFinder:
 
     @catch_error("Error finding end tag for:", 1)
     def _get_end_tag(self, stag, tag_finder):
-        stag_name = XmlTag(stag).tag_name
+        stag_name = XmlTag(stag).name
         num_to_find = 1
         l, r, tag = None, None, None
         while num_to_find > 0:
             l, r, tag = next(tag_finder)
             if self._is_valid_end_tag(stag, tag):
                 num_to_find -= 1
-            elif XmlTag(tag).tag_name == stag_name and not self._is_singular(tag):
+            elif XmlTag(tag).name == stag_name and not self._is_singular(tag):
                 num_to_find += 1
         return l, r, tag
 
@@ -73,6 +73,6 @@ class XmlFinder:
         return tag[-2] == '/'
 
     def _is_valid_end_tag(self, start_tag, end_tag):
-        start_name = XmlTag(start_tag).tag_name
-        end_name = XmlTag(end_tag).tag_name
+        start_name = XmlTag(start_tag).name
+        end_name = XmlTag(end_tag).name
         return start_name == end_name and end_tag[1] == '/'
