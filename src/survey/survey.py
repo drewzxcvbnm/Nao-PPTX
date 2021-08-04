@@ -22,6 +22,6 @@ class Survey:
             options = [op.content for op in ques.get_child_tag('options').get_child_tag('o')]
             question = {"question": ques.get_child_tag_content('q'), "options": options}
             if ques.get_child_tag_content('validoption') is not None:
-                question['validOption'] = int(ques.get_child_tag_content('validoption'))
+                question['validoption'] = int(ques.get_child_tag_content('validoption'))
             questions.append(question)
         return questions
