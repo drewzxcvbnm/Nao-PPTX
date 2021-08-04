@@ -2,12 +2,14 @@ import qi
 from services import mem
 
 
-def handleEvent(x):
-    print "HANDLING " + x
-    if x not in eventmap.keys():
-        print "ERROR: eventmap cannot handle event:" + x
+def handle_event(event):
+    eventname = event.split('_')[0]
+    args = event.split('_')[1:]
+    print "HANDLING " + eventname
+    if eventname not in eventmap.keys():
+        print "ERROR: eventmap cannot handle event:" + eventname
     mem.insertData("event", None)
-    eventmap[x]()
+    eventmap[eventname](*args)
 
 
 def crash():
@@ -16,7 +18,7 @@ def crash():
 
 mem.declareEvent("event")
 subscriber = mem.subscriber("event")
-disconnect = subscriber.signal.connect(handleEvent)
+disconnect = subscriber.signal.connect(handle_event)
 
 eventmap = {
     "crash": crash

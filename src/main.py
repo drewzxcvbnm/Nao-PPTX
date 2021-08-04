@@ -9,6 +9,6 @@ if __name__ == '__main__':
     alife.setState("safeguard")
     path = args.pr
     pr = preader.PresentationReader(path)
-    pr.readSlides()
+    pr.read_slides()
     pr.close()
     sys.exit(0)

@@ -1,0 +1,90 @@
+// vim: set ft=xml:
+
+TAGS:
+    <do[/]> - for executing animations:
+        animation (MANDATORY) - path to animation to execute (dependent on animation-ns)
+        == ^start(path) ^wait(path)
+    </do> - wait for animation to finish
+
+    <set/> - user for settings semi global values:
+        animation-ns (OPTIONAL) -  folder path to use for finding animations.
+        voice (OPTIONAL, neutral/joyful/didactic) - set voice for speech
+
+    <pause/> - pause speech:
+        time (OPTIONAL, default = 100) - pause time
+
+    <next/> - trigger slide transition 
+
+    <rspd[/]> - set reading speed:
+        speed (MANDATORY) - reading speed
+    </rspd> -set reading speed back to default (100)
+
+    <emph/> - set emphasis for word:
+        word (MANDATORY) - word to use
+        pos (MANDATORY, 0/1/2) - where to put emphasis
+    
+    <vol[/]> - set volume:
+        value (MANDATORY) - volume
+    </vol> - set volume to default (100)
+
+    <rmode[/]> - set reading mode:
+        mode (MANDATORY, word/sent/char) - reading mode to use 
+    </rmode> - set reading mode to default (sentence)
+
+    <rst/> - set default to all parametrs
+
+    <video[/]> - start video playback
+    </video> - wait for end of video playback
+    <audio[/]> - alias for video tag
+    </audio>
+
+    <stext> - идея просто пушка, БОМБА НАХУЙ я бы сказал. Просто сделать парсер для парсера который парсит в парсер. План ахуенный, я за.
+    </stext> - Устал парситься и хайпиться, переходи на более низкий уровень парсинга. Ну ничего, скоро на ассемблере будешь писать GLHF
+
+	<startsurvey[/]> - creates and opens survey
+		id (MANDATORY) -  id of survey to start
+	</startsurvey> - waits till end of survey
+
+
+Survey example:
+	<survey id="2">
+		<pin>0A2X</pin>
+		<type>auto</type>
+		<questions>
+			<question>
+				<q>What is the first letter of the english alphabet?</q>
+				<validoption>1</validoption>
+				<options>
+					<o>A</o>
+					<o>B</o>
+					<o>C</o>
+				</options>
+			</question>
+			<question>
+				<q>What is the second letter?</q>
+				<timelimit>10</timelimit>
+				<validoption>2</validoption>
+				<options>
+					<o>Z</o>
+					<o>B</o>
+					<o>O</o>
+				</options>
+			</question>
+			<question>
+				<q>What is the Last letter?</q>
+				<timelimit>50</timelimit>
+				<validoption>1</validoption>
+				<options>
+					<o>Z</o>
+					<o>B</o>
+					<o>O</o>
+				</options>
+			</question>
+		</questions>
+	</survey>
+
+
+Do example:
+		<do Monster_1 = ^start(..)>
+		<\do ...> = ^start(..)
+

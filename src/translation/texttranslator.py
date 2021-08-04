@@ -1,5 +1,5 @@
 # coding=utf-8
-from naoxml.xmltranslator import XmlTagService, XmlTranslationException
+from naoxml.xmltranslator import XmlTagService
 from naoxml.xmltag import XmlTag
 from naoxml.xmlfinder import XmlFinder
 import re
@@ -12,12 +12,13 @@ class XmlTranslator:
         self.xmlFinder = XmlFinder()
 
     def process(self, text):
-        r = XmlTag(XmlTag(self._xmlwrap(text)).getTranslatedTagAsString())
-        if r.getTagName() == "temptag":
-            return r.getTagContent()
+        r = XmlTag(XmlTag(self._xmlwrap(text)).get_translated_tag_as_string())
+        if r.name == "temptag":
+            return r.content
         return r.str
 
-    def _xmlwrap(self, text):
+    @staticmethod
+    def _xmlwrap(text):
         if text[0] == '<':
             return text
         return "<temptag>" + text + "</temptag>"
@@ -40,11 +41,18 @@ class CharacaterNormalizer:
 
 class DuplicateSpaceRemover:
 
-    def process(self, text):
+    def __init__(self):
+        pass
+
+    @staticmethod
+    def process(text):
         return re.sub(" +", " ", text)
 
 
 class TextTranslationSystem:
+    def __init__(self):
+        pass
+
     textProcessors = [CharacaterNormalizer(),
                       XmlTranslator(),
                       DuplicateSpaceRemover()]

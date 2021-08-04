@@ -5,14 +5,19 @@ import time
 from services import atts, tts, touch, motion
 import qi
 from slidepresentor import SlidePresentor
+from web.webinterface import WebInterface
+
 langs = {
-    "rus" : "Alyona22Enhanced",
-    "eng" : "naoenu"
+    "rus": "Alyona22Enhanced",
+    "eng": "naoenu"
 }
+
 
 class PresentationReader:
 
-    def __init__(self, path, lang = "eng"):
+    def __init__(self, path, lang="eng"):
+        name = path.split('\\')[-1].split('.')[0]
+        self.presentation_id = WebInterface.create_presentation(name)
         self.stop = False
         tts.setVoice(langs[lang])
         self.path = path
@@ -23,19 +28,21 @@ class PresentationReader:
         self.slideShow = self.presentation.SlideShowSettings.Run()
         self.eventHandler = Eventloop()
         self.eventHandler.addEvent(Event(self._stop, [], binaryPredicate(lambda: touch.getStatus()[8][1], False, True)))
-        self.eventHandler.addEvent(Event(self._nextSlide, [], binaryPredicate(lambda: touch.getStatus()[7][1], False, True)))
-        self.eventHandler.addEvent(Event(self._prevSlide, [], binaryPredicate(lambda: touch.getStatus()[9][1], False, True)))
-        self.slideReader = SlidePresentor(self.slideShow)
+        self.eventHandler.addEvent(
+            Event(self._next_slide, [], binaryPredicate(lambda: touch.getStatus()[7][1], False, True)))
+        self.eventHandler.addEvent(
+            Event(self._prev_slide, [], binaryPredicate(lambda: touch.getStatus()[9][1], False, True)))
+        self.slideReader = SlidePresentor(self.slideShow, self.presentation_id)
 
-    def readSlides(self):
-        self.ppt=Presentation(self.path)
+    def read_slides(self):
+        self.ppt = Presentation(self.path)
         self.iSlide = 0
         self.eventHandler.start()
         while self.iSlide < len(self.ppt.slides):
             if self.stop:
                 break
             self.slideShow.View.GotoSlide(self.iSlide + 1)
-            self.slideReader.readSlide(self.ppt.slides[self.iSlide])
+            self.slideReader.read_slide(self.ppt.slides[self.iSlide])
             self.iSlide += 1
             time.sleep(1)
 
@@ -48,12 +55,10 @@ class PresentationReader:
     def _stop(self):
         self.stop = True
         tts.stopAll()
-   
-    def _nextSlide(self):
-        global tts
+
+    def _next_slide(self):
         tts.stopAll()
 
-    def _prevSlide(self):
-        global tts
+    def _prev_slide(self):
         self.iSlide -= 2
         tts.stopAll()
