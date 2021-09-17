@@ -1,5 +1,8 @@
+# coding=utf-8
 import qi
 import argparse
+
+EVENT_ARG_DELIMITER = "○"
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--ip", help="IP address for NAO", required=True)
@@ -20,3 +23,4 @@ asr = session.service("ALSpeechRecognition")
 touch = session.service("ALTouch")
 mem = session.service("ALMemory")
 posture = session.service("ALRobotPosture")
+behman = session.service("ALBehaviorManager")

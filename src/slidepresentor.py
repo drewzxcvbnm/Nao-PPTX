@@ -8,6 +8,7 @@ from eventmap import eventmap
 from translation.texttranslator import TextTranslationSystem
 from events.surveyevent import SurveyEvent
 from events.mediapresentationevent import MediaPresentationEvent
+from events.behavioractionevent import BehaviorActionEvent
 
 
 class SlidePresentor:
@@ -21,9 +22,12 @@ class SlidePresentor:
             slideshow=pythoncom.CoMarshalInterThreadInterfaceInStream(pythoncom.IID_IDispatch, slide_show))
         executor3 = COMThreadEventExecutor(
             slideshow=pythoncom.CoMarshalInterThreadInterfaceInStream(pythoncom.IID_IDispatch, slide_show))
+        executor4 = COMThreadEventExecutor(
+            slideshow=pythoncom.CoMarshalInterThreadInterfaceInStream(pythoncom.IID_IDispatch, slide_show))
         eventmap["next"] = lambda: executor.add_event_to_queue(self._next)
         eventmap["startmedia"] = lambda: executor2.add_event_to_queue(MediaPresentationEvent(self))
         eventmap["startsurvey"] = lambda sid: executor3.add_event_to_queue(SurveyEvent(self, sid, pid))
+        eventmap["behavior"] = lambda name: executor4.add_event_to_queue(BehaviorActionEvent(self, name))
 
     def read_slide(self, slide):
         text_note = slide.notes_slide.notes_text_frame.text

@@ -1,10 +1,10 @@
 import qi
-from services import mem
+from services import mem, EVENT_ARG_DELIMITER
 
 
 def handle_event(event):
-    eventname = event.split('_')[0]
-    args = event.split('_')[1:]
+    eventname = event.split(EVENT_ARG_DELIMITER)[0]
+    args = event.split(EVENT_ARG_DELIMITER)[1:]
     print "HANDLING " + eventname
     if eventname not in eventmap.keys():
         print "ERROR: eventmap cannot handle event:" + eventname

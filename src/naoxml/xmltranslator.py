@@ -1,6 +1,8 @@
+# coding=utf-8
 from xmlexceptions import XmlTranslationException
 from xmltag import XmlTag
 from survey.survey import Survey, surveys
+from services import EVENT_ARG_DELIMITER
 
 animationNamespace = None
 
@@ -28,9 +30,14 @@ class DoHandler:
     def __call__(self, tag):
         tag = XmlTag(tag)
         self.attrs = tag.attributes
-        if tag.is_singular() == 1:
+        if "behavior" in self.attrs.keys():
+            return self._handle_start_behavior()
+        if tag.is_singular():
             return self._handle_start_tag() + self._handle_end_tag()
         return self._handle_start_tag() + tag.content + self._handle_end_tag()
+
+    def _handle_start_behavior(self):
+        return " $event=behavior{}{} ".format(EVENT_ARG_DELIMITER,self.attrs["behavior"])
 
     def _handle_start_tag(self):
         given_path = self.attrs["animation"]
@@ -166,7 +173,7 @@ class SurveyStartHandler:
         return self._handle_start_tag() + self.tag.content + self._handle_end_tag()
 
     def _handle_start_tag(self):
-        return " $event=startsurvey_{} ".format(self.tag.attributes['id'])
+        return " $event=startsurvey{}{} ".format(EVENT_ARG_DELIMITER, self.tag.attributes['id'])
 
     def _handle_end_tag(self):
         return " <split/> "

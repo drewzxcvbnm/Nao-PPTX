@@ -29,8 +29,8 @@ class PresentationReader:
         # self.presentation.SlideShowSettings.ShowWithAnimation = False
         self.slideShow = self.presentation.SlideShowSettings.Run()
         self.eventHandler = Eventloop()
-        self.eventHandler.addEvent(Event(self._pause, [], binaryPredicate(lambda: touch.getStatus()[8][1], False, True),
-                                         single_use=False, threadable=False))
+        self.eventHandler.addEvent(
+            Event(self._pause, [], binaryPredicate(lambda: touch.getStatus()[8][1], False, True)))
         self.eventHandler.addEvent(
             Event(self._next_slide, [], binaryPredicate(lambda: touch.getStatus()[7][1], False, True)))
         self.eventHandler.addEvent(
