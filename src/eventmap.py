@@ -13,7 +13,7 @@ def handle_event(event):
 
 
 def crash():
-    raise BufferError("some exception")
+    raise RuntimeError("some exception")
 
 
 mem.declareEvent("event")
