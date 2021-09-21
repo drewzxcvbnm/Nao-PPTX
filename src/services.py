@@ -1,10 +1,7 @@
 # coding=utf-8
 import qi
-import argparse
+from constants import parser
 
-EVENT_ARG_DELIMITER = "○"
-
-parser = argparse.ArgumentParser()
 parser.add_argument("--ip", help="IP address for NAO", required=True)
 parser.add_argument("--pr", help="Path of presentation", default="naoPPTX.pptx")
 

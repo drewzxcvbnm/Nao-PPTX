@@ -1,5 +1,6 @@
 import qi
-from services import mem, EVENT_ARG_DELIMITER
+from services import mem
+from constants import EVENT_ARG_DELIMITER
 
 
 def handle_event(event):

@@ -2,7 +2,7 @@
 from xmlexceptions import XmlTranslationException
 from xmltag import XmlTag
 from survey.survey import Survey, surveys
-from services import EVENT_ARG_DELIMITER
+from constants import EVENT_ARG_DELIMITER
 
 animationNamespace = None
 
