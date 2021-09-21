@@ -1,7 +1,11 @@
 from xmlexceptions import XmlValidationException
 from general import flatlist
 
+
 class XmlTagValidator:
+
+    def __init__(self):
+        pass   # empty init
 
     @classmethod
     def validate(cls, xmltag, mandatory_fields):
@@ -21,6 +25,5 @@ class XmlTagValidator:
     @classmethod
     def _get_children_from_tag(cls, tag, field):
         if isinstance(tag, list):
-            # return [t.get_child_tag(field) for t in tag]
             return [cls._get_children_from_tag(t, field) for t in tag]
         return [tag.get_child_tag(field)]

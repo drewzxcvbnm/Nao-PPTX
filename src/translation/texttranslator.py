@@ -8,8 +8,8 @@ import re
 class XmlTranslator:
 
     def __init__(self):
-        self.xmlTagService = XmlTagService()
-        self.xmlFinder = XmlFinder()
+        self.xml_tag_service = XmlTagService()
+        self.xml_finder = XmlFinder()
 
     def process(self, text):
         r = XmlTag(XmlTag(self._xmlwrap(text)).get_translated_tag_as_string())
@@ -26,7 +26,7 @@ class XmlTranslator:
 
 class CharacaterNormalizer:
     def __init__(self):
-        self.notNormalizedDic = {
+        self.not_normalized_dic = {
             '“': '"',
             '”': '"',
             '«': '"',
@@ -34,7 +34,7 @@ class CharacaterNormalizer:
         }
 
     def process(self, text):
-        for k, v in self.notNormalizedDic.items():
+        for k, v in self.not_normalized_dic.items():
             text = text.replace(k, v)
         return text
 
@@ -42,7 +42,7 @@ class CharacaterNormalizer:
 class DuplicateSpaceRemover:
 
     def __init__(self):
-        pass
+        pass  # empty init
 
     @staticmethod
     def process(text):
@@ -51,14 +51,14 @@ class DuplicateSpaceRemover:
 
 class TextTranslationSystem:
     def __init__(self):
-        pass
+        pass  # empty init
 
-    textProcessors = [CharacaterNormalizer(),
-                      XmlTranslator(),
-                      DuplicateSpaceRemover()]
+    text_processors = [CharacaterNormalizer(),
+                       XmlTranslator(),
+                       DuplicateSpaceRemover()]
 
     @staticmethod
     def translate(text):
-        for processor in TextTranslationSystem.textProcessors:
+        for processor in TextTranslationSystem.text_processors:
             text = processor.process(text)
         return text

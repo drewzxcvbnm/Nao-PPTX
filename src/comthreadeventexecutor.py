@@ -8,19 +8,19 @@ import win32com
 class COMThreadEventExecutor:
 
     def __init__(self, **com_context):
-        self.eventQueue = deque()
-        self.COMContext = com_context
+        self.event_queue = deque()
+        self.com_context = com_context
         self.loop = True
         Thread(target=self._run).start()
 
     def add_event_to_queue(self, func):
-        self.eventQueue.append(func)
+        self.event_queue.append(func)
 
     def _run(self):
         self._init_context()
         while self.loop:
-            if len(self.eventQueue) != 0:
-                self.eventQueue.popleft()(self.COMContext)
+            if len(self.event_queue) != 0:
+                self.event_queue.popleft()(self.com_context)
             time.sleep(0.1)
 
     def stop(self):
@@ -28,6 +28,6 @@ class COMThreadEventExecutor:
 
     def _init_context(self):
         pythoncom.CoInitialize()
-        for name, id in self.COMContext.items():
-            self.COMContext[name] = win32com.client.Dispatch(
+        for name, id in self.com_context.items():
+            self.com_context[name] = win32com.client.Dispatch(
                 pythoncom.CoGetInterfaceAndReleaseStream(id, pythoncom.IID_IDispatch))

@@ -12,7 +12,7 @@ def catch_error(message, arg):
                 a = kwargs[arg]
             try:
                 r = function(*args, **kwargs)
-            except Exception as e:
+            except Exception:
                 raise XmlTranslationException(message + str(a))
             return r
 
@@ -24,11 +24,11 @@ def catch_error(message, arg):
 class XmlFinder:
 
     def __init__(self):
-        pass
+        pass  # empty init
 
     def find_xml_tag(self, text):
         self.text = text
-        while self.text.find('<') != -1:
+        if self.text.find('<') != -1:
             tag_finder = self._get_tag_finder(self.text)
             l1, r1, stag = next(tag_finder)
             if self._is_singular(stag):
@@ -67,7 +67,7 @@ class XmlFinder:
         tag = text[lbound:rbound + 1]
         if tag.count('<') > 1:
             raise XmlTranslationException("Tag '{}' contains '<' within itself.".format(tag))
-        return (lbound, rbound, tag)
+        return lbound, rbound, tag
 
     def _is_singular(self, tag):
         return tag[-2] == '/'

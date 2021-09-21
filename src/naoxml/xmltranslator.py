@@ -17,6 +17,9 @@ def str_to_xml_tag(function):
 
 class XmlTagService:
 
+    def __init__(self):
+        pass  # empty init
+
     def translate_tag(self, tag):
         tag = XmlTag(tag)
         name = tag.name
@@ -26,6 +29,9 @@ class XmlTagService:
 
 
 class DoHandler:
+
+    def __init__(self):
+        pass  # empty init
 
     def __call__(self, tag):
         tag = XmlTag(tag)
@@ -37,15 +43,19 @@ class DoHandler:
         return self._handle_start_tag() + tag.content + self._handle_end_tag()
 
     def _handle_start_behavior(self):
-        return " $event=behavior{}{} ".format(EVENT_ARG_DELIMITER,self.attrs["behavior"])
+        return " $event=behavior{}{} ".format(EVENT_ARG_DELIMITER, self.attrs["behavior"])
 
     def _handle_start_tag(self):
         given_path = self.attrs["animation"]
+        if given_path is None:
+            raise TypeError("animation path is None")
         path = given_path if animationNamespace is None else animationNamespace + given_path
         return "^start({}) ".format(path)
 
     def _handle_end_tag(self):
         given_path = self.attrs["animation"]
+        if given_path is None:
+            raise TypeError("animation path is None")
         path = given_path if animationNamespace is None else animationNamespace + given_path
         return " ^wait({}) ".format(path)
 
@@ -84,6 +94,9 @@ def set_handler(tag):
 
 class RmodeHandler:
 
+    def __init__(self):
+        pass  # empty init
+
     def __call__(self, tag):
         tag = XmlTag(tag)
         self.attrs = tag.attributes
@@ -101,6 +114,9 @@ class RmodeHandler:
 
 class VolHandler:
 
+    def __init__(self):
+        pass  # empty init
+
     def __call__(self, tag):
         tag = XmlTag(tag)
         self.attrs = tag.attributes
@@ -117,6 +133,9 @@ class VolHandler:
 
 
 class RspdHandler:
+
+    def __init__(self):
+        pass  # empty init
 
     def __call__(self, tag):
         tag = XmlTag(tag)
@@ -139,6 +158,9 @@ def rst_handler(tag):
 
 
 class MediaHandler:
+
+    def __init__(self):
+        pass  # empty init
 
     def __call__(self, tag):
         tag = XmlTag(tag)
@@ -163,7 +185,7 @@ def survey_handler(tag):
 class SurveyStartHandler:
 
     def __init__(self):
-        pass
+        pass  # empty init
 
     def __call__(self, tag):
         self.tag = XmlTag(tag)

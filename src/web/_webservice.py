@@ -5,7 +5,7 @@ import httplib
 class _WebService:
 
     def __init__(self):
-        pass
+        pass  # empty init
 
     @staticmethod
     def json_post(url, data):

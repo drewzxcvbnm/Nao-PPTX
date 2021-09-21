@@ -14,8 +14,8 @@ from events.behavioractionevent import BehaviorActionEvent
 class SlidePresentor:
 
     def __init__(self, slide_show, pid):
-        self.slideShow = slide_show
-        self.ongoingEvents = []
+        self.slide_show = slide_show
+        self.ongoing_events = []
         executor = COMThreadEventExecutor(
             slideshow=pythoncom.CoMarshalInterThreadInterfaceInStream(pythoncom.IID_IDispatch, slide_show))
         executor2 = COMThreadEventExecutor(
@@ -32,16 +32,16 @@ class SlidePresentor:
     def read_slide(self, slide):
         text_note = slide.notes_slide.notes_text_frame.text
         notes = text_note.encode('utf-8')
-        print "Before translation:{}".format(str(notes))
+        print ("Before translation:{}".format(str(notes)))
         notes = TextTranslationSystem.translate(notes)
-        print "After translation:{}".format(str(notes))
+        print ("After translation:{}".format(str(notes)))
         for chunk in notes.split("<split/>"):
             say = qi.async(atts.say, (str(chunk)), delay=100)
             say.wait()
             self._wait_for_ongoing_events_to_stop()
 
     def _wait_for_ongoing_events_to_stop(self):
-        while len(self.ongoingEvents) != 0:
+        while len(self.ongoing_events) != 0:
             time.sleep(0.1)
 
     def _next(self, com_context):
@@ -49,7 +49,7 @@ class SlidePresentor:
         ss.View.Next()
 
     def _startvideo(self):
-        pass
+        pass  # xoz
 
     def __del__(self):
         eventmap.pop("next")
