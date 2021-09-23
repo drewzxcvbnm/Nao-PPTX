@@ -1,5 +1,5 @@
 # coding=utf-8
-from ..texttranslator import TextTranslationSystem
+from translation.texttranslator import TextTranslationSystem
 import unittest
 
 

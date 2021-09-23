@@ -2,8 +2,9 @@
 
 TAGS:
     <do[/]> - for executing animations:
-        animation (MANDATORY) - path to animation to execute (dependent on animation-ns)
+        animation (MANDATORY SELECT ONE) - path to animation to execute (dependent on animation-ns)
         == ^start(path) ^wait(path)
+        behavior (MANDATORY SELECT ONE)
     </do> - wait for animation to finish
 
     <set/> - user for settings semi global values:

@@ -8,7 +8,7 @@ class SurveyEvent:
 
     def __init__(self, slide_presentor, sid, pid):
         self.slide_presentor = slide_presentor
-        self.slide_presentor.ongoingEvents.append(self)
+        self.slide_presentor.ongoing_events.append(self)
         self.sid = sid
         self.pid = pid
 
@@ -20,4 +20,4 @@ class SurveyEvent:
         while st.lower() != 'closed':
             time.sleep(3)
             st = WebInterface.get_survey_status(survey)
-        self.slide_presentor.ongoingEvents.remove(self)
+        self.slide_presentor.ongoing_events.remove(self)

@@ -1,6 +1,6 @@
 import threading
 import win32com.client as win32
-from eventmanager import *
+from eventmanager import Eventloop, Event, binaryPredicate
 from pptx import Presentation
 import time
 from services import atts, tts, touch, motion
@@ -26,36 +26,35 @@ class PresentationReader:
         self.ppoint = win32.gencache.EnsureDispatch('Powerpoint.Application')
         self.ppoint.Visible = True
         self.presentation = self.ppoint.Presentations.Open(path)
-        # self.presentation.SlideShowSettings.ShowWithAnimation = False
-        self.slideShow = self.presentation.SlideShowSettings.Run()
-        self.eventHandler = Eventloop()
-        self.eventHandler.addEvent(Event(self._pause, [], binaryPredicate(lambda: touch.getStatus()[8][1], False, True),
-                                         single_use=False, threadable=False))
-        self.eventHandler.addEvent(
+        self.slide_show = self.presentation.SlideShowSettings.Run()
+        self.event_handler = Eventloop()
+        self.event_handler.addEvent(
+            Event(self._pause, [], binaryPredicate(lambda: touch.getStatus()[8][1], False, True)))
+        self.event_handler.addEvent(
             Event(self._next_slide, [], binaryPredicate(lambda: touch.getStatus()[7][1], False, True)))
-        self.eventHandler.addEvent(
+        self.event_handler.addEvent(
             Event(self._prev_slide, [], binaryPredicate(lambda: touch.getStatus()[9][1], False, True)))
-        self.slideReader = SlidePresentor(self.slideShow, self.presentation_id)
+        self.slide_reader = SlidePresentor(self.slide_show, self.presentation_id)
 
     def read_slides(self):
+        self.i_slide = 0
         self.ppt = Presentation(self.path)
-        self.iSlide = 0
-        self.eventHandler.start()
-        while self.iSlide < len(self.ppt.slides):
+        self.event_handler.start()
+        while self.i_slide < len(self.ppt.slides):
             if self.stop:
                 break
             self.lock.acquire()
-            self.slideShow.View.GotoSlide(self.iSlide + 1)
-            self.slideReader.read_slide(self.ppt.slides[self.iSlide])
-            self.iSlide += 1
+            self.slide_show.View.GotoSlide(self.i_slide + 1)
+            self.slide_reader.read_slide(self.ppt.slides[self.i_slide])
+            self.i_slide += 1
             self.lock.release()
             time.sleep(1)
 
     def close(self):
-        self.eventHandler.stop()
+        self.event_handler.stop()
         self.presentation.Close()
         self.ppoint.Quit()
-        self.eventHandler.join()
+        self.event_handler.join()
 
     def _pause(self):
         print ("pause")
@@ -76,5 +75,5 @@ class PresentationReader:
         tts.stopAll()
 
     def _prev_slide(self):
-        self.iSlide -= 2
+        self.i_slide -= 2
         tts.stopAll()

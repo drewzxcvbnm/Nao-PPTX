@@ -6,7 +6,7 @@ import json
 
 class WebInterface:
     def __init__(self):
-        pass
+        pass  # empty init
 
     domain = 'www.tsinao.com'
 

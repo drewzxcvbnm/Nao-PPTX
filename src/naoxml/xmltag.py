@@ -26,7 +26,7 @@ class XmlTag:
         tag = self.start_tag
         if ' ' in tag:
             return tag[1: tag.find(' ')]
-        return re.sub("(<|>|/)", "", tag)
+        return re.sub("([<>/])", "", tag)
 
     def is_singular(self):
         return self.tag.count('<') == 1
