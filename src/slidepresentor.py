@@ -49,7 +49,7 @@ class SlidePresentor:
         ss.View.Next()
 
     def _startvideo(self):
-        pass  # xoz
+        pass  # empty init
 
     def __del__(self):
         eventmap.pop("next")
