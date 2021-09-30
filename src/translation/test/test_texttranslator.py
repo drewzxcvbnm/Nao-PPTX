@@ -3,6 +3,11 @@ from translation.texttranslator import TextTranslationSystem
 import unittest
 
 
+class MockPresentation:
+    def __init__(self):
+        self.surveys = {}
+
+
 class TestTranslator(unittest.TestCase):
 
     def test_translation(self):
@@ -48,7 +53,7 @@ conquer the world without human approval, <emph word="for" pos="2"/> now <pause 
 	</questions>
 </survey>
 """
-        result = TextTranslationSystem.translate(txt)
+        result = TextTranslationSystem(MockPresentation()).translate(txt)
         expected = """
 So, how do I work? ^start(/test/anim) It’s ^start(/another/test) quite ^wait(/another/test) simple, 
  ^wait(/test/anim) I have a head \pau=200\ and a computer inside of it.

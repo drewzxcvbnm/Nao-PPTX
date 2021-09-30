@@ -1,7 +1,7 @@
 from naoxml.xmltagvalidator import XmlTagValidator
 
 # local id -> Survey Object
-surveys = {}
+# surveys = {}
 
 
 class Survey:

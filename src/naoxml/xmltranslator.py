@@ -1,31 +1,11 @@
 # coding=utf-8
-from xmlexceptions import XmlTranslationException
-from xmltag import XmlTag
-from survey.survey import Survey, surveys
+from naoxml.xmlexceptions import XmlTranslationException
+from naoxml.xmltag import XmlTag
+from naoxml.xmlfinder import XmlFinder
+from survey.survey import Survey
 from constants import EVENT_ARG_DELIMITER
 
 animationNamespace = None
-
-
-def str_to_xml_tag(function):
-    def wrapper(tag_as_str):
-        tag = XmlTag(tag_as_str)
-        return function(tag)
-
-    return wrapper
-
-
-class XmlTagService:
-
-    def __init__(self):
-        pass  # empty init
-
-    def translate_tag(self, tag):
-        tag = XmlTag(tag)
-        name = tag.name
-        if name not in xmltags.keys():
-            return tag.str
-        return xmltags[name](tag.str)
 
 
 class DoHandler:
@@ -34,7 +14,6 @@ class DoHandler:
         pass  # empty init
 
     def __call__(self, tag):
-        tag = XmlTag(tag)
         self.attrs = tag.attributes
         if "behavior" in self.attrs.keys():
             return self._handle_start_behavior()
@@ -64,13 +43,11 @@ def next_handler(tag):
     return " $event=next "
 
 
-@str_to_xml_tag
 def pause_handler(tag):
     attrs = tag.attributes
     return " \\pau={}\\ ".format(attrs.get('time', 100))
 
 
-@str_to_xml_tag
 def emph_handler(tag):
     attrs = tag.attributes
     if "word" not in attrs.keys():
@@ -80,7 +57,6 @@ def emph_handler(tag):
     return " \\emph={}\\ {} ".format(attrs["pos"], attrs["word"])
 
 
-@str_to_xml_tag
 def set_handler(tag):
     attrs = tag.attributes
     ret = ""
@@ -98,7 +74,6 @@ class RmodeHandler:
         pass  # empty init
 
     def __call__(self, tag):
-        tag = XmlTag(tag)
         self.attrs = tag.attributes
         if tag.is_singular():
             return self._handle_start_tag()
@@ -118,7 +93,6 @@ class VolHandler:
         pass  # empty init
 
     def __call__(self, tag):
-        tag = XmlTag(tag)
         self.attrs = tag.attributes
         if tag.is_singular():
             return self._handle_start_tag()
@@ -138,7 +112,6 @@ class RspdHandler:
         pass  # empty init
 
     def __call__(self, tag):
-        tag = XmlTag(tag)
         self.attrs = tag.attributes
         if tag.is_singular():
             return self._handle_start_tag()
@@ -152,7 +125,6 @@ class RspdHandler:
         return " \\rspd=100\\ "
 
 
-@str_to_xml_tag
 def rst_handler(tag):
     return " \\rst\\ "
 
@@ -163,7 +135,6 @@ class MediaHandler:
         pass  # empty init
 
     def __call__(self, tag):
-        tag = XmlTag(tag)
         self.attrs = tag.attributes
         if tag.is_singular():
             return " $event=startmedia <split/> "
@@ -176,9 +147,8 @@ class MediaHandler:
         return " <split/> "
 
 
-@str_to_xml_tag
-def survey_handler(tag):
-    surveys[tag.attributes['id']] = Survey(tag)
+def survey_handler(tag, presentation):
+    presentation.surveys[tag.attributes['id']] = Survey(tag)
     return ""
 
 
@@ -201,18 +171,51 @@ class SurveyStartHandler:
         return " <split/> "
 
 
-xmltags = {
-    "do": DoHandler(),
-    "next": next_handler,
-    "pause": pause_handler,
-    "emph": emph_handler,
-    "set": set_handler,
-    "rspd": RspdHandler(),
-    "vol": VolHandler(),
-    "rmode": RmodeHandler(),
-    "rst": rst_handler,
-    "video": MediaHandler(),
-    "audio": MediaHandler(),
-    "survey": survey_handler,
-    "startsurvey": SurveyStartHandler()
-}
+class XmlTranslator:
+
+    def __init__(self, presentation):
+        self.xml_finder = XmlFinder()
+        self.presentation = presentation
+        self.xmltags = {
+            "do": DoHandler(),
+            "next": next_handler,
+            "pause": pause_handler,
+            "emph": emph_handler,
+            "set": set_handler,
+            "rspd": RspdHandler(),
+            "vol": VolHandler(),
+            "rmode": RmodeHandler(),
+            "rst": rst_handler,
+            "video": MediaHandler(),
+            "audio": MediaHandler(),
+            "survey": lambda t: survey_handler(t, presentation),
+            "startsurvey": SurveyStartHandler()
+        }
+
+    def process(self, text):
+        r = XmlTag(self.get_translated_tag_as_string(XmlTag(self._xmlwrap(text))))
+        if r.name == "temptag":
+            return r.content
+        return r.str
+
+    def get_translated_tag_as_string(self, xmltag):
+        if xmltag.is_singular():
+            return self.translate_tag(xmltag.str)
+        children = {t.str: t for t in xmltag.child_tags}.values()
+        content = xmltag.content
+        for child in children:
+            content = content.replace(child.str, self.get_translated_tag_as_string(child))
+        return self.translate_tag(xmltag.start_tag + content + xmltag.end_tag)
+
+    def translate_tag(self, tag):
+        tag = XmlTag(tag)
+        name = tag.name
+        if name not in self.xmltags.keys():
+            return tag.str
+        return self.xmltags[name](tag)
+
+    @staticmethod
+    def _xmlwrap(text):
+        if text[0] == '<':
+            return text
+        return "<temptag>" + text + "</temptag>"

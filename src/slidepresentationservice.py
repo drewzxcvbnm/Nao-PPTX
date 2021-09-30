@@ -11,19 +11,21 @@ from events.mediapresentationevent import MediaPresentationEvent
 from events.behavioractionevent import BehaviorActionEvent
 
 
-class SlidePresentor:
+class SlidePresentationService:
 
-    def __init__(self, slide_show, pid):
-        self.slide_show = slide_show
+    def __init__(self, presentation):
+        pid = presentation.presentation_id
+        self.slide_show = presentation.com_slide_show
         self.ongoing_events = []
+        self.translation_system = TextTranslationSystem(presentation)
         executor = COMThreadEventExecutor(
-            slideshow=pythoncom.CoMarshalInterThreadInterfaceInStream(pythoncom.IID_IDispatch, slide_show))
+            slideshow=pythoncom.CoMarshalInterThreadInterfaceInStream(pythoncom.IID_IDispatch, self.slide_show))
         executor2 = COMThreadEventExecutor(
-            slideshow=pythoncom.CoMarshalInterThreadInterfaceInStream(pythoncom.IID_IDispatch, slide_show))
+            slideshow=pythoncom.CoMarshalInterThreadInterfaceInStream(pythoncom.IID_IDispatch, self.slide_show))
         executor3 = COMThreadEventExecutor(
-            slideshow=pythoncom.CoMarshalInterThreadInterfaceInStream(pythoncom.IID_IDispatch, slide_show))
+            slideshow=pythoncom.CoMarshalInterThreadInterfaceInStream(pythoncom.IID_IDispatch, self.slide_show))
         executor4 = COMThreadEventExecutor(
-            slideshow=pythoncom.CoMarshalInterThreadInterfaceInStream(pythoncom.IID_IDispatch, slide_show))
+            slideshow=pythoncom.CoMarshalInterThreadInterfaceInStream(pythoncom.IID_IDispatch, self.slide_show))
         eventmap["next"] = lambda: executor.add_event_to_queue(self._next)
         eventmap["startmedia"] = lambda: executor2.add_event_to_queue(MediaPresentationEvent(self))
         eventmap["startsurvey"] = lambda sid: executor3.add_event_to_queue(SurveyEvent(self, sid, pid))
@@ -32,9 +34,9 @@ class SlidePresentor:
     def read_slide(self, slide):
         text_note = slide.notes_slide.notes_text_frame.text
         notes = text_note.encode('utf-8')
-        print ("Before translation:{}".format(str(notes)))
-        notes = TextTranslationSystem.translate(notes)
-        print ("After translation:{}".format(str(notes)))
+        print("Before translation:{}".format(str(notes)))
+        notes = self.translation_system.translate(notes)
+        print("After translation:{}".format(str(notes)))
         for chunk in notes.split("<split/>"):
             say = qi.async(atts.say, (str(chunk)), delay=100)
             say.wait()
