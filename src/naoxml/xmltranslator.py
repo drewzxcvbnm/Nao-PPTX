@@ -39,7 +39,7 @@ class DoHandler:
         return " ^wait({}) ".format(path)
 
 
-def next_handler(tag, events):
+def next_handler(events):
     return events['next'].to_string()
 
 
@@ -178,7 +178,7 @@ class XmlTranslator:
         self.presentation = presentation
         self.xmltags = {
             "do": DoHandler(presentation.event_map),
-            "next": next_handler,
+            "next": lambda t: next_handler(presentation.event_map),
             "pause": pause_handler,
             "emph": emph_handler,
             "set": set_handler,

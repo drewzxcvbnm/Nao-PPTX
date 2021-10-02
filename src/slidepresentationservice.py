@@ -2,7 +2,7 @@ import time
 
 import qi
 import pythoncom
-from services import atts
+from services import atts, mem
 from events.event import Event
 from translation.texttranslator import TextTranslationSystem
 from events.surveyevent import SurveyEvent
@@ -18,10 +18,11 @@ class SlidePresentationService:
         self.ongoing_events = []
         self.translation_system = TextTranslationSystem(presentation)
         com_context = {'slideshow': self.slide_show}
-        presentation.event_map["next"] = Event("next", self._next, presentation, com_context, blocking=False)
-        presentation.event_map["startmedia"] = Event("startmedia", MediaPresentationEvent(), presentation, com_context)
-        presentation.event_map["startsurvey"] = Event("startsurvey", SurveyEvent(pid), presentation, com_context)
-        presentation.event_map["behaviour"] = Event("behaviour", BehaviorActionEvent(), presentation, com_context)
+        event_map = presentation.event_map
+        event_map["next"] = Event("next", self._next, presentation, com_context, blocking=False)
+        event_map["startmedia"] = Event("startmedia", MediaPresentationEvent(), presentation, com_context)
+        event_map["startsurvey"] = Event("startsurvey", SurveyEvent(presentation), presentation, com_context)
+        event_map["behaviour"] = Event("behaviour", BehaviorActionEvent(), presentation, com_context)
 
     def read_slide(self, slide):
         text_note = slide.notes_slide.notes_text_frame.text
@@ -35,7 +36,7 @@ class SlidePresentationService:
             self._wait_for_ongoing_events_to_stop()
 
     def _wait_for_ongoing_events_to_stop(self):
-        while len(self.ongoing_events) != 0:
+        while mem.getData('wait') != 0:
             time.sleep(0.1)
 
     def _next(self, com_context):

@@ -14,7 +14,7 @@ class Event:
     global_executor = ComThreadEventExecutor()
     mutex = Lock()
 
-    def __init__(self, name, function, presentation, execution_model=ExecutionModel.SEPARATE, com_context=None,
+    def __init__(self, name, function, presentation, com_context=None, execution_model=ExecutionModel.SEPARATE,
                  blocking=True):
         self.name = name
         self.function = function

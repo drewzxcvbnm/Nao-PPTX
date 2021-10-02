@@ -4,6 +4,10 @@ from pptx import Presentation as PPTXPresentation
 from constants import EVENT_ARG_DELIMITER
 from services import mem
 
+# mem event MUST be declated immediately here
+mem.declareEvent("event")
+subscriber = mem.subscriber("event")
+
 
 class Presentation:
 
@@ -19,8 +23,6 @@ class Presentation:
         self.surveys = {}
         self.ongoing_events = []
         self.event_map = {}
-        mem.declareEvent("event")
-        subscriber = mem.subscriber("event")
         disconnect = subscriber.signal.connect(self.handle_event)
 
     def handle_event(self, event):
