@@ -23,7 +23,7 @@ class Presentation:
         self.surveys = {}
         self.ongoing_events = []
         self.event_map = {}
-        disconnect = subscriber.signal.connect(self.handle_event)
+        subscriber.signal.connect(self.handle_event)
 
     def handle_event(self, event):
         eventname = event.split(EVENT_ARG_DELIMITER)[0]

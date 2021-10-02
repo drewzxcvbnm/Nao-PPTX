@@ -13,9 +13,7 @@ from events.behavioractionevent import BehaviorActionEvent
 class SlidePresentationService:
 
     def __init__(self, presentation):
-        pid = presentation.presentation_id
         self.slide_show = presentation.com_slide_show
-        self.ongoing_events = []
         self.translation_system = TextTranslationSystem(presentation)
         com_context = {'slideshow': self.slide_show}
         event_map = presentation.event_map

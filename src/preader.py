@@ -52,7 +52,6 @@ class PresentationReadingService:
         self.lock.acquire()
         while not touch.getStatus()[8][1]:
             time.sleep(0.1)
-            print("111")
         print("resume")
         self.lock.release()
         time.sleep(1)

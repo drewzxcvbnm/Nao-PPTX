@@ -3,3 +3,4 @@ import argparse
 
 parser = argparse.ArgumentParser()
 EVENT_ARG_DELIMITER = "○"
+DOMAIN_REGEX = ".*?(?=/)"
