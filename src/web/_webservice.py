@@ -23,3 +23,11 @@ class _WebService:
         conn.request('GET', url.replace(domain, ""))
         response = conn.getresponse()
         return response.read()
+
+    @staticmethod
+    def delete(url):
+        domain = re.findall(".*?(?=/)", url)[0]
+        conn = httplib.HTTPSConnection(domain)
+        conn.request('DELETE', url.replace(domain, ""))
+        response = conn.getresponse()
+        return response.read()

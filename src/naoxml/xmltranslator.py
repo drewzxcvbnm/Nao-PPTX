@@ -10,19 +10,19 @@ animationNamespace = None
 
 class DoHandler:
 
-    def __init__(self):
-        pass  # empty init
+    def __init__(self, event_map):
+        self.events = event_map
 
     def __call__(self, tag):
         self.attrs = tag.attributes
-        if "behavior" in self.attrs.keys():
+        if "behaviour" in self.attrs.keys():
             return self._handle_start_behavior()
         if tag.is_singular():
             return self._handle_start_tag() + self._handle_end_tag()
         return self._handle_start_tag() + tag.content + self._handle_end_tag()
 
     def _handle_start_behavior(self):
-        return " $event=behavior{}{} ".format(EVENT_ARG_DELIMITER, self.attrs["behavior"])
+        return self.events['behaviour'].to_string(self.attrs["behavior"])
 
     def _handle_start_tag(self):
         given_path = self.attrs["animation"]
@@ -39,8 +39,8 @@ class DoHandler:
         return " ^wait({}) ".format(path)
 
 
-def next_handler(tag):
-    return " $event=next "
+def next_handler(tag, events):
+    return events['next'].to_string()
 
 
 def pause_handler(tag):
@@ -131,17 +131,17 @@ def rst_handler(tag):
 
 class MediaHandler:
 
-    def __init__(self):
-        pass  # empty init
+    def __init__(self, event_map):
+        self.events = event_map
 
     def __call__(self, tag):
         self.attrs = tag.attributes
         if tag.is_singular():
-            return " $event=startmedia <split/> "
+            return self.events['startmedia'].to_string() + '<split/> '
         return self._handle_start_tag() + tag.content + self._handle_end_tag()
 
     def _handle_start_tag(self):
-        return " $event=startmedia "
+        return self.events['startmedia'].to_string()
 
     def _handle_end_tag(self):
         return " <split/> "
@@ -154,8 +154,8 @@ def survey_handler(tag, presentation):
 
 class SurveyStartHandler:
 
-    def __init__(self):
-        pass  # empty init
+    def __init__(self, event_map):
+        self.events = event_map
 
     def __call__(self, tag):
         self.tag = XmlTag(tag)
@@ -165,7 +165,7 @@ class SurveyStartHandler:
         return self._handle_start_tag() + self.tag.content + self._handle_end_tag()
 
     def _handle_start_tag(self):
-        return " $event=startsurvey{}{} ".format(EVENT_ARG_DELIMITER, self.tag.attributes['id'])
+        return self.events['startsurvey'].to_string()
 
     def _handle_end_tag(self):
         return " <split/> "
@@ -177,7 +177,7 @@ class XmlTranslator:
         self.xml_finder = XmlFinder()
         self.presentation = presentation
         self.xmltags = {
-            "do": DoHandler(),
+            "do": DoHandler(presentation.event_map),
             "next": next_handler,
             "pause": pause_handler,
             "emph": emph_handler,
@@ -186,10 +186,10 @@ class XmlTranslator:
             "vol": VolHandler(),
             "rmode": RmodeHandler(),
             "rst": rst_handler,
-            "video": MediaHandler(),
-            "audio": MediaHandler(),
+            "video": MediaHandler(presentation.event_map),
+            "audio": MediaHandler(presentation.event_map),
             "survey": lambda t: survey_handler(t, presentation),
-            "startsurvey": SurveyStartHandler()
+            "startsurvey": SurveyStartHandler(presentation.event_map)
         }
 
     def process(self, text):

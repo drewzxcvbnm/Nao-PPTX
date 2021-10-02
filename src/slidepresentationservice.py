@@ -1,10 +1,9 @@
 import time
 
-from services import atts
-from comthreadeventexecutor import COMThreadEventExecutor
 import qi
 import pythoncom
-from eventmap import eventmap
+from services import atts
+from events.event import Event
 from translation.texttranslator import TextTranslationSystem
 from events.surveyevent import SurveyEvent
 from events.mediapresentationevent import MediaPresentationEvent
@@ -18,18 +17,11 @@ class SlidePresentationService:
         self.slide_show = presentation.com_slide_show
         self.ongoing_events = []
         self.translation_system = TextTranslationSystem(presentation)
-        executor = COMThreadEventExecutor(
-            slideshow=pythoncom.CoMarshalInterThreadInterfaceInStream(pythoncom.IID_IDispatch, self.slide_show))
-        executor2 = COMThreadEventExecutor(
-            slideshow=pythoncom.CoMarshalInterThreadInterfaceInStream(pythoncom.IID_IDispatch, self.slide_show))
-        executor3 = COMThreadEventExecutor(
-            slideshow=pythoncom.CoMarshalInterThreadInterfaceInStream(pythoncom.IID_IDispatch, self.slide_show))
-        executor4 = COMThreadEventExecutor(
-            slideshow=pythoncom.CoMarshalInterThreadInterfaceInStream(pythoncom.IID_IDispatch, self.slide_show))
-        eventmap["next"] = lambda: executor.add_event_to_queue(self._next)
-        eventmap["startmedia"] = lambda: executor2.add_event_to_queue(MediaPresentationEvent(self))
-        eventmap["startsurvey"] = lambda sid: executor3.add_event_to_queue(SurveyEvent(self, sid, pid))
-        eventmap["behavior"] = lambda name: executor4.add_event_to_queue(BehaviorActionEvent(self, name))
+        com_context = {'slideshow': self.slide_show}
+        presentation.event_map["next"] = Event("next", self._next, presentation, com_context, blocking=False)
+        presentation.event_map["startmedia"] = Event("startmedia", MediaPresentationEvent(), presentation, com_context)
+        presentation.event_map["startsurvey"] = Event("startsurvey", SurveyEvent(pid), presentation, com_context)
+        presentation.event_map["behaviour"] = Event("behaviour", BehaviorActionEvent(), presentation, com_context)
 
     def read_slide(self, slide):
         text_note = slide.notes_slide.notes_text_frame.text
@@ -49,10 +41,3 @@ class SlidePresentationService:
     def _next(self, com_context):
         ss = com_context["slideshow"]
         ss.View.Next()
-
-    def _startvideo(self):
-        pass  # empty init
-
-    def __del__(self):
-        eventmap.pop("next")
-        eventmap.pop("startvideo")

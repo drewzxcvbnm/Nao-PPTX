@@ -1,6 +1,8 @@
 import win32com.client as win32
 from web.webinterface import WebInterface
 from pptx import Presentation as PPTXPresentation
+from constants import EVENT_ARG_DELIMITER
+from services import mem
 
 
 class Presentation:
@@ -15,8 +17,21 @@ class Presentation:
         self.pptx_presentation = PPTXPresentation(self.path)
         self.slides = self.pptx_presentation.slides
         self.surveys = {}
+        self.ongoing_events = []
+        self.event_map = {}
+        mem.declareEvent("event")
+        subscriber = mem.subscriber("event")
+        disconnect = subscriber.signal.connect(self.handle_event)
+
+    def handle_event(self, event):
+        eventname = event.split(EVENT_ARG_DELIMITER)[0]
+        print("HANDLING " + eventname)
+        if eventname not in self.event_map.keys():
+            print("ERROR: eventmap cannot handle event:" + eventname)
+        mem.insertData("event", None)
+        self.event_map[eventname].execute_event(event)
 
     def __del__(self):
         self.com_presentation.Close()
         self.com_ppoint.Quit()
-        # TODO: delete presentation and all surveys with WebInterface
+        WebInterface.delete_presentation(self.presentation_id)
