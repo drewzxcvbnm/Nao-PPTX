@@ -14,6 +14,7 @@ class ComThreadEventExecutor:
             self._pre_init_context()
         self.loop = True
         self.thread = Thread(target=self._run)
+        self.thread.daemon = True
         self.thread.start()
 
     def add_event_to_queue(self, func):
