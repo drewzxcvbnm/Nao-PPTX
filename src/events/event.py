@@ -28,19 +28,36 @@ class Event:
         self.execution_model = execution_model
 
     def execute_event(self, string):
-        args = self._get_args(string)
+        func = self._get_execution_function(string)
         if not self.blocking:
-            self.add_to_executor(args)
+            self.add_to_executor(func)
             return
+        func = self._get_function_with_self_removal(func)
         self.add_self()
-        self.add_to_executor(args)
-        self.remove_self()
+        self.add_to_executor(func)
 
-    def add_to_executor(self, *args):
+    def add_to_executor(self, func):
         if self.com_context is not None:
-            self.executor.add_event_to_queue(lambda cc: self.function(cc, *args))
+            func.with_com_context = True
+        self.executor.add_event_to_queue(func)
+
+    def _get_function_with_self_removal(self, function):
+        def with_removal(*args, **kwargs):
+            function(*args, **kwargs)
+            Event.mutex.acquire()
+            self.presentation.ongoing_events.remove(self)
+            if len(self.presentation.ongoing_events) == 0:
+                mem.insertData("wait", 0)
+            Event.mutex.release()
+
+        return with_removal
+
+    def _get_execution_function(self, string):
+        args = self._get_args(string)
+        if self.com_context is not None:
+            return lambda cc: self.function(cc, *args)
         else:
-            self.executor.add_event_to_queue(lambda: self.function(*args))
+            return lambda: self.function(*args)
 
     def remove_self(self):
         Event.mutex.acquire()

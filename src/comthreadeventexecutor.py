@@ -24,10 +24,11 @@ class ComThreadEventExecutor:
             self._init_context()
         while self.loop:
             if len(self.event_queue) != 0:
-                if self.com_context is not None:
-                    self.event_queue.popleft()(self.com_context)
+                function = self.event_queue.popleft()
+                if getattr(function, 'with_com_context', False):
+                    function(self.com_context)
                 else:
-                    self.event_queue.popleft()()
+                    function()
             time.sleep(0.1)
 
     def __del__(self):
