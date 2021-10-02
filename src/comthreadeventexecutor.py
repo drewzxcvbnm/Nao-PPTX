@@ -35,8 +35,10 @@ class ComThreadEventExecutor:
         self.thread.join()
 
     def _pre_init_context(self):
+        com_context = {}
         for name, obj in self.com_context.items():
-            self.com_context[name] = pythoncom.CoMarshalInterThreadInterfaceInStream(pythoncom.IID_IDispatch, obj)
+            com_context[name] = pythoncom.CoMarshalInterThreadInterfaceInStream(pythoncom.IID_IDispatch, obj)
+        self.com_context = com_context
 
     def _init_context(self):
         pythoncom.CoInitialize()

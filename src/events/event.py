@@ -30,11 +30,17 @@ class Event:
     def execute_event(self, string):
         args = self._get_args(string)
         if not self.blocking:
-            self.executor.add_event_to_queue(lambda: self.function(*args))
+            self.add_to_executor(args)
             return
         self.add_self()
-        self.executor.add_event_to_queue(lambda: self.function(*args))
+        self.add_to_executor(args)
         self.remove_self()
+
+    def add_to_executor(self, *args):
+        if self.com_context is not None:
+            self.executor.add_event_to_queue(lambda cc: self.function(cc, *args))
+        else:
+            self.executor.add_event_to_queue(lambda: self.function(*args))
 
     def remove_self(self):
         Event.mutex.acquire()
