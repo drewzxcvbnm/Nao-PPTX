@@ -81,3 +81,6 @@ class Event:
     def _get_args(self, string):
         args = string.split(EVENT_ARG_DELIMITER)[1:]
         return args
+
+    def __del__(self):
+        del self.executor

@@ -37,3 +37,5 @@ class Presentation:
         self.com_presentation.Close()
         self.com_ppoint.Quit()
         WebInterface.delete_presentation(self.presentation_id)
+        for values in self.event_map.values():
+            del values
