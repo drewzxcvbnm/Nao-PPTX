@@ -1,4 +1,4 @@
-from xmlexceptions import XmlValidationException
+from naoxml.xmlexceptions import XmlValidationException
 from general import flatlist
 
 

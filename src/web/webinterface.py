@@ -30,6 +30,10 @@ class WebInterface:
         resp = _WebService.get(cls.domain + '/survey/status/{}'.format(survey.remote_id))
         return json.loads(resp)['status']
 
+    @classmethod
+    def delete_presentation(cls, pid):
+        _WebService.delete(cls.domain + '/delete/presentation/{}'.format(pid))
+
     @staticmethod
     def _safe_remove(json_map, field):
         if field in json_map:

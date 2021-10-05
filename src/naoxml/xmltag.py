@@ -1,7 +1,7 @@
 # coding=utf-8
 import re
 
-from xmlexceptions import XmlTranslationException
+from naoxml.xmlexceptions import XmlTranslationException
 
 
 def cached_children(f):
@@ -78,7 +78,7 @@ class XmlTag:
     @property
     @cached_children
     def child_tags(self):
-        from xmlfinder import XmlFinder
+        from naoxml.xmlfinder import XmlFinder
         xml_finder = XmlFinder()
         tags = []
         content = self.content
@@ -102,17 +102,6 @@ class XmlTag:
         if ch is None:
             return None
         return ch.content
-
-    def get_translated_tag_as_string(self):
-        from xmltranslator import XmlTagService
-        xml_tag_service = XmlTagService()
-        if self.is_singular():
-            return xml_tag_service.translate_tag(self.str)
-        children = {t.str: t for t in self.child_tags}.values()
-        content = self.content
-        for child in children:
-            content = content.replace(child.str, child.get_translated_tag_as_string())
-        return xml_tag_service.translate_tag(self.start_tag + content + self.end_tag)
 
     def __repr__(self):
         if self.is_singular():

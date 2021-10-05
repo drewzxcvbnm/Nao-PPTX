@@ -1,5 +1,5 @@
-from xmlexceptions import XmlTranslationException
-from xmltag import XmlTag
+from naoxml.xmlexceptions import XmlTranslationException
+from naoxml.xmltag import XmlTag
 
 
 def catch_error(message, arg):

@@ -1,5 +1,5 @@
 from naoxml.xmltag import XmlTag
-from ..survey import Survey
+from survey.survey import Survey
 import unittest
 
 
@@ -49,9 +49,9 @@ class TestSurvey(unittest.TestCase):
         self.assertEquals(result.pin, "0A2X")
         self.assertEquals(result.remote_id, None)
         self.assertEquals(result.questions, [
-            {'question': 'What is the first letter of the english alphabet?', 'options': ['A', 'B', 'C'], 'validOption': '1'},
-            {'question': 'What is the second letter?', 'options': ['Z', 'B', 'O'], 'validOption': '2'},
-            {'question': 'What is the Last letter?', 'options': ['Z', 'B', 'O'], 'validOption': '1'}])
+            {'question': 'What is the first letter of the english alphabet?', 'options': ['A', 'B', 'C'], 'validoption': 1},
+            {'question': 'What is the second letter?', 'options': ['Z', 'B', 'O'], 'validoption': 2},
+            {'question': 'What is the Last letter?', 'options': ['Z', 'B', 'O'], 'validoption': 1}])
         self.assertEquals(result.local_sid, "2")
 
 
