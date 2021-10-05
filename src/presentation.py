@@ -1,8 +1,11 @@
+import time
+
 import win32com.client as win32
 from web.webinterface import WebInterface
 from pptx import Presentation as PPTXPresentation
 from constants import EVENT_ARG_DELIMITER
 from services import mem
+from general import kill_process
 
 # mem event MUST be declated immediately here
 mem.declareEvent("event")
@@ -39,3 +42,4 @@ class Presentation:
         WebInterface.delete_presentation(self.presentation_id)
         for values in self.event_map.values():
             del values
+        kill_process("POWERPNT.exe")
