@@ -13,6 +13,7 @@ from events.behavioractionevent import BehaviorActionEvent
 class SlidePresentationService:
 
     def __init__(self, presentation):
+        mem.insertData('wait', 0)
         self.slide_show = presentation.com_slide_show
         self.translation_system = TextTranslationSystem(presentation)
         com_context = {'slideshow': self.slide_show}
