@@ -3,7 +3,7 @@ import qi
 from constants import parser
 
 parser.add_argument("--ip", help="IP address for NAO", required=True)
-parser.add_argument("--pr", help="Path of presentation", default="naoPPTX.pptx")
+parser.add_argument("--pr", help="Path of presentation (full path)", default="naoPPTX.pptx")
 
 args = parser.parse_args()
 session = qi.Session()
