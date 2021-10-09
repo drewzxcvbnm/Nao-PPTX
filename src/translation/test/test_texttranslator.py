@@ -63,7 +63,7 @@ conquer the world without human approval, <emph word="for" pos="2"/> now <pause 
 """
         result = TextTranslationSystem(MockPresentation()).translate(txt)
         expected = r"""
-So, how do I work? ^start(/test/anim) It’s ^start(/another/test) quite ^wait(/another/test) simple,
+So,how do I work? ^start(/test/anim) It’s ^start(/another/test) quite ^wait(/another/test) simple,
  ^wait(/test/anim) I have a head \pau=200\ and a computer inside of it.
 This computer works like a human brain, but with a lot of limitations and a lack of conscience,
 and I am only capable of doing what was programmed into me and \pau=150\ nothing more. So unfortunately \pau=100\ I can’t
