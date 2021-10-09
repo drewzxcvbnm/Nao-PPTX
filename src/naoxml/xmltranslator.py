@@ -3,7 +3,6 @@ from naoxml.xmlexceptions import XmlTranslationException
 from naoxml.xmltag import XmlTag
 from naoxml.xmlfinder import XmlFinder
 from survey.survey import Survey
-from constants import EVENT_ARG_DELIMITER
 
 animationNamespace = None
 

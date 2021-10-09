@@ -1,7 +1,6 @@
 import time
 
 import qi
-import pythoncom
 from services import atts, mem
 from events.event import Event
 from translation.texttranslator import TextTranslationSystem

@@ -1,4 +1,3 @@
-import time
 
 import win32com.client as win32
 from web.webinterface import WebInterface
