@@ -1,9 +1,7 @@
-import qi
-from services import asr, alife, posture, args
+from services import asr, alife, args
 import preader
 import sys
 from presentation import Presentation
-import pythoncom
 
 if __name__ == '__main__':
     asr.pause(1)

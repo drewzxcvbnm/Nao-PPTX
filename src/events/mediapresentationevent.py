@@ -1,4 +1,3 @@
-import pythoncom
 import time
 
 

@@ -1,11 +1,8 @@
 import threading
-import win32com.client as win32
 from eventmanager import Eventloop, Event, binaryPredicate
 import time
-from services import atts, tts, touch, motion
-import qi
+from services import tts, touch
 from slidepresentationservice import SlidePresentationService
-from web.webinterface import WebInterface
 
 langs = {
     "rus": "Alyona22Enhanced",
