@@ -19,6 +19,7 @@ def app_exit():
 
 def on_press(key):
     if key == keyboard.Key.esc:
+        kill_process("POWERPNT.exe")
         app_exit()
 
 
