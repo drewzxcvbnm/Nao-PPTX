@@ -1,4 +1,3 @@
-
 import win32com.client as win32
 from web.webinterface import WebInterface
 from pptx import Presentation as PPTXPresentation
@@ -36,9 +35,9 @@ class Presentation:
         self.event_map[eventname].execute_event(event)
 
     def __del__(self):
+        self.com_slide_show.View.Exit()
         self.com_presentation.Close()
         self.com_ppoint.Quit()
         WebInterface.delete_presentation(self.presentation_id)
         for values in self.event_map.values():
             del values
-        kill_process("POWERPNT.exe")
