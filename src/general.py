@@ -11,7 +11,6 @@ def flatlist(obj):
 
 
 def kill_process(name):
-    pass
     for proc in psutil.process_iter():
         if proc.name().lower() == name.lower():
             proc.kill()
