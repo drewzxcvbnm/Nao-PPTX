@@ -1,4 +1,3 @@
-from enum import Enum
 from services import mem
 from threading import Lock
 from comthread import ComThread

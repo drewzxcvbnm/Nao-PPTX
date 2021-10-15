@@ -1,3 +1,4 @@
+# flake8: noqa E402
 import sys
 
 sys.coinit_flags = 0
@@ -21,7 +22,6 @@ def app_exit():
 
 def on_press(key):
     if key == keyboard.Key.esc:
-        kill_process("POWERPNT.exe")
         app_exit()
 
 

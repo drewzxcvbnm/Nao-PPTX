@@ -9,4 +9,4 @@ class ComThread:
     def start(self):
         pythoncom.CoInitializeEx(pythoncom.COINIT_MULTITHREADED)
         self.run()
-        pythoncom.CoUnitiaizle()
+        pythoncom.CoUninitialize()

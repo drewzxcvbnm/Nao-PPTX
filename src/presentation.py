@@ -3,7 +3,6 @@ from web.webinterface import WebInterface
 from pptx import Presentation as PPTXPresentation
 from constants import EVENT_ARG_DELIMITER
 from services import mem
-from general import kill_process
 
 # mem event MUST be declated immediately here
 mem.declareEvent("event")
