@@ -1,45 +1,28 @@
 from enum import Enum
-from constants import EVENT_ARG_DELIMITER
-from comthreadeventexecutor import ComThreadEventExecutor
-from threading import Lock
 from services import mem
-
-
-class ExecutionModel(Enum):
-    GLOBAL = 1  # event executed on global thread executor
-    SEPARATE = 2  # event executed on newly created thead executor
+from threading import Lock
+from comthread import ComThread
+from constants import EVENT_ARG_DELIMITER
 
 
 class Event:
-    global_executor = ComThreadEventExecutor()
     mutex = Lock()
 
-    def __init__(self, name, function, presentation, com_context=None, execution_model=ExecutionModel.SEPARATE,
-                 blocking=True):
+    def __init__(self, name, function, presentation, com_context=None, blocking=True):
         self.name = name
         self.function = function
         self.presentation = presentation
         self.com_context = com_context
         self.blocking = blocking
-        if execution_model == ExecutionModel.SEPARATE:
-            self.executor = ComThreadEventExecutor(com_context)
-        if execution_model == ExecutionModel.GLOBAL:
-            self.executor = Event.global_executor
-        self.execution_model = execution_model
 
     def execute_event(self, string):
         func = self._get_execution_function(string)
         if not self.blocking:
-            self.add_to_executor(func)
+            ComThread(target=func).start()
             return
         func = self._get_function_with_self_removal(func)
         self.add_self()
-        self.add_to_executor(func)
-
-    def add_to_executor(self, func):
-        if self.com_context is not None:
-            func.with_com_context = True
-        self.executor.add_event_to_queue(func)
+        ComThread(target=func).start()
 
     def _get_function_with_self_removal(self, function):
         def with_removal(*args, **kwargs):
@@ -58,13 +41,6 @@ class Event:
             return lambda cc: self.function(cc, *args)
         else:
             return lambda: self.function(*args)
-
-    def remove_self(self):
-        Event.mutex.acquire()
-        self.presentation.ongoing_events.remove(self)
-        if len(self.presentation.ongoing_events) == 0:
-            mem.insertData("wait", 0)
-        Event.mutex.release()
 
     def add_self(self):
         Event.mutex.acquire()

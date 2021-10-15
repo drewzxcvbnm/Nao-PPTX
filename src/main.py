@@ -1,4 +1,6 @@
 import sys
+
+sys.coinit_flags = 0
 import preader
 from pynput import keyboard
 from threading import Thread
