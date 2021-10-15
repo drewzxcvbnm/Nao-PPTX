@@ -7,7 +7,7 @@ from pynput import keyboard
 from threading import Thread
 from general import kill_process
 from presentation import Presentation
-from services import asr, alife, args
+from services import asr, alife, args, tts
 
 kill_process("POWERPNT.exe")
 
@@ -15,6 +15,7 @@ kill_process("POWERPNT.exe")
 def app_exit():
     presentation.__del__()
     reading_service.__del__()
+    tts.stopAll()
     alife.setState("interactive")
     kill_process("POWERPNT.exe")
     sys.exit(0)

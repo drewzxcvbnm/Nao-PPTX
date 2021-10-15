@@ -6,7 +6,7 @@ class MediaPresentationEvent:
     def __init__(self, slide_show):
         self.ss = slide_show
 
-    def __call__(self, com_context):
+    def __call__(self):
         ss = self.ss
         sh = self._get_media_shape(ss.View.Slide)
         time.sleep(ss.View.Slide.SlideShowTransition.Duration)
