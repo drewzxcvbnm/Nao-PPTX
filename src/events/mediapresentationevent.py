@@ -3,8 +3,11 @@ import time
 
 class MediaPresentationEvent:
 
-    def __call__(self, com_context):
-        ss = com_context["slideshow"]
+    def __init__(self, slide_show):
+        self.ss = slide_show
+
+    def __call__(self):
+        ss = self.ss
         sh = self._get_media_shape(ss.View.Slide)
         time.sleep(ss.View.Slide.SlideShowTransition.Duration)
         pl = ss.View.Player(sh.Id)

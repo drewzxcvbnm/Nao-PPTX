@@ -9,7 +9,7 @@ class SurveyEvent:
         self.pid = presentation.presentation_id
         self.surveys = presentation.surveys
 
-    def __call__(self, com_context, sid):
+    def __call__(self, sid):
         survey = self.surveys[sid]
         WebInterface.create_survey(survey, self.pid)
         WebInterface.open_survey(survey)

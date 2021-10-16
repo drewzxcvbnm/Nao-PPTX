@@ -15,12 +15,11 @@ class SlidePresentationService:
         mem.insertData('wait', 0)
         self.slide_show = presentation.com_slide_show
         self.translation_system = TextTranslationSystem(presentation)
-        com_context = {'slideshow': self.slide_show}
         event_map = presentation.event_map
-        event_map["next"] = Event("next", self._next, presentation, com_context, blocking=False)
-        event_map["startmedia"] = Event("startmedia", MediaPresentationEvent(), presentation, com_context)
-        event_map["startsurvey"] = Event("startsurvey", SurveyEvent(presentation), presentation, com_context)
-        event_map["behaviour"] = Event("behaviour", BehaviorActionEvent(), presentation, com_context)
+        event_map["next"] = Event("next", self._next, presentation, blocking=False)
+        event_map["startmedia"] = Event("startmedia", MediaPresentationEvent(self.slide_show), presentation)
+        event_map["startsurvey"] = Event("startsurvey", SurveyEvent(presentation), presentation)
+        event_map["behaviour"] = Event("behaviour", BehaviorActionEvent(), presentation)
 
     def read_slide(self, slide):
         text_note = slide.notes_slide.notes_text_frame.text
@@ -37,6 +36,6 @@ class SlidePresentationService:
         while mem.getData('wait') != 0:
             time.sleep(0.1)
 
-    def _next(self, com_context):
-        ss = com_context["slideshow"]
+    def _next(self, ):
+        ss = self.slide_show
         ss.View.Next()
