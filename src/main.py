@@ -7,7 +7,8 @@ from pynput import keyboard
 from threading import Thread
 from general import kill_process
 from presentation import Presentation
-from services import asr, alife, args, tts
+from services import asr, alife, tts
+from args import ARGS
 
 kill_process("POWERPNT.exe")
 
@@ -27,7 +28,7 @@ def on_press(key):
 
 
 listener = keyboard.Listener(on_press=lambda k: Thread(target=lambda: on_press(k)).start())
-path = args.pr
+path = ARGS.pr
 presentation = Presentation(path)
 reading_service = preader.PresentationReadingService()
 
