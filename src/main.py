@@ -7,13 +7,14 @@ from pynput import keyboard
 from threading import Thread
 from general import kill_process
 from presentation import Presentation
-from services import asr, alife, tts
+from services import asr, alife, tts, behman
 from args import ARGS
 
 kill_process("POWERPNT.exe")
 
 
 def app_exit():
+    behman.stopAllBehaviors()
     presentation.__del__()
     reading_service.__del__()
     tts.stopAll()
