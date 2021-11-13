@@ -9,6 +9,7 @@ from general import kill_process
 from presentation import Presentation
 from services import asr, alife, tts, behman
 from args import ARGS
+import pythoncom
 
 kill_process("POWERPNT.exe")
 
@@ -20,16 +21,18 @@ def app_exit():
     tts.stopAll()
     # alife.setState("interactive")
     kill_process("POWERPNT.exe")
+    pythoncom.CoUninitialize()
     sys.exit(0)
 
 
 def on_press(key):
     if key == keyboard.Key.esc:
-        import pythoncom
         pythoncom.CoInitializeEx(pythoncom.COINIT_MULTITHREADED)
         app_exit()
 
 
+pythoncom.CoUninitialize()
+pythoncom.CoInitializeEx(pythoncom.COINIT_MULTITHREADED)
 listener = keyboard.Listener(on_press=lambda k: Thread(target=lambda: on_press(k)).start())
 path = ARGS.pr
 presentation = Presentation(path)
