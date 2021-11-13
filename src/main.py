@@ -17,13 +17,15 @@ def app_exit():
     presentation.__del__()
     reading_service.__del__()
     tts.stopAll()
-    alife.setState("interactive")
+    # alife.setState("interactive")
     kill_process("POWERPNT.exe")
     sys.exit(0)
 
 
 def on_press(key):
     if key == keyboard.Key.esc:
+        import pythoncom
+        pythoncom.CoInitializeEx(pythoncom.COINIT_MULTITHREADED)
         app_exit()
 
 

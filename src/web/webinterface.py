@@ -25,34 +25,34 @@ class WebInterface:
 
     domain = 'www.tsinao.com'
 
-    @classmethod
+    @staticmethod
     @InetDependent(-1)
-    def create_presentation(cls, name):
-        return _WebService.json_post(cls.domain + '/create/presentation', json.dumps({"name": name}))
+    def create_presentation(name):
+        return _WebService.json_post(WebInterface.domain + '/create/presentation', json.dumps({"name": name}))
 
-    @classmethod
+    @staticmethod
     @InetDependent
-    def create_survey(cls, survey, pid):
+    def create_survey(survey, pid):
         json_data = json.loads(jsonpickle.encode(survey, unpicklable=False))
         json_data = json.dumps(json_data)
-        remote_id = _WebService.json_post(cls.domain + '/presentation/{}/create/survey'.format(pid), json_data)
+        remote_id = _WebService.json_post(WebInterface.domain + '/presentation/{}/create/survey'.format(pid), json_data)
         survey.remote_id = remote_id
 
-    @classmethod
+    @staticmethod
     @InetDependent
-    def open_survey(cls, survey):
-        _WebService.get(cls.domain + '/open/survey/{}'.format(survey.remote_id))
+    def open_survey(survey):
+        _WebService.get(WebInterface.domain + '/open/survey/{}'.format(survey.remote_id))
 
-    @classmethod
+    @staticmethod
     @InetDependent("closed")
-    def get_survey_status(cls, survey):
-        resp = _WebService.get(cls.domain + '/survey/status/{}'.format(survey.remote_id))
+    def get_survey_status(survey):
+        resp = _WebService.get(WebInterface.domain + '/survey/status/{}'.format(survey.remote_id))
         return json.loads(resp)['status']
 
-    @classmethod
+    @staticmethod
     @InetDependent
-    def delete_presentation(cls, pid):
-        _WebService.delete(cls.domain + '/delete/presentation/{}'.format(pid))
+    def delete_presentation(pid):
+        _WebService.delete(WebInterface.domain + '/delete/presentation/{}'.format(pid))
 
     @staticmethod
     @InetDependent

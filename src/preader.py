@@ -1,3 +1,4 @@
+import sys
 import threading
 from eventmanager import Eventloop, Event, binaryPredicate
 import time
@@ -15,6 +16,7 @@ class PresentationReadingService:
     def __init__(self, lang="eng"):
         self.lock = threading.Lock()
         self.stop = False
+        self.slide_reader = None
         tts.setVoice(langs[lang])
         self.event_handler = Eventloop()
         self.event_handler.addEvent(
@@ -25,7 +27,7 @@ class PresentationReadingService:
             Event(self._prev_slide, [], binaryPredicate(lambda: touch.getStatus()[9][1], False, True)))
 
     def read_presentation(self, presentation):
-        slide_reader = SlidePresentationService(presentation)
+        self.slide_reader = SlidePresentationService(presentation)
         presentation.com_ppoint.Visible = True
         self.i_slide = 0
         self.event_handler.start()
@@ -34,12 +36,14 @@ class PresentationReadingService:
                 break
             self.lock.acquire()
             presentation.com_slide_show.View.GotoSlide(self.i_slide + 1)
-            slide_reader.read_slide(presentation.slides[self.i_slide])
+            self.slide_reader.read_slide(presentation.slides[self.i_slide])
             self.i_slide += 1
             self.lock.release()
             time.sleep(1)
 
     def __del__(self):
+        self.i_slide = sys.maxint
+        self.slide_reader.__del__()
         self.event_handler.stop()
         self.event_handler.join()
 
