@@ -21,7 +21,7 @@ class SlidePresentationService:
         event_map["next"] = Event("next", self._next, presentation, blocking=False)
         event_map["startmedia"] = Event("startmedia", MediaPresentationEvent(self.slide_show), presentation)
         event_map["startsurvey"] = Event("startsurvey", SurveyEvent(presentation), presentation)
-        event_map["behaviour"] = Event("behaviour", BehaviorActionEvent(), presentation)
+        event_map["behavior"] = Event("behavior", BehaviorActionEvent(), presentation)
 
     def read_slide(self, slide):
         text_note = slide.notes_slide.notes_text_frame.text

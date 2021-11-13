@@ -14,14 +14,14 @@ class DoHandler:
 
     def __call__(self, tag):
         self.attrs = tag.attributes
-        if "behaviour" in self.attrs.keys():
-            return self._handle_start_behavior()
+        if "behavior" in self.attrs.keys():
+            return self._handle_start_behavior() + "<split/>"
         if tag.is_singular():
             return self._handle_start_tag() + self._handle_end_tag()
         return self._handle_start_tag() + tag.content + self._handle_end_tag()
 
     def _handle_start_behavior(self):
-        return self.events['behaviour'].to_string(self.attrs["behavior"])
+        return self.events['behavior'].to_string(self.attrs["behavior"])
 
     def _handle_start_tag(self):
         given_path = self.attrs["animation"]
