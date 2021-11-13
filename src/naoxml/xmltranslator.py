@@ -14,26 +14,35 @@ class DoHandler:
 
     def __call__(self, tag):
         self.attrs = tag.attributes
-        if "behavior" in self.attrs.keys():
-            return self._handle_start_behavior() + "<split/>"
         if tag.is_singular():
-            return self._handle_start_tag() + self._handle_end_tag()
-        return self._handle_start_tag() + tag.content + self._handle_end_tag()
+            return self._get_start_tag() + self._get_end_tag()
+        return self._get_start_tag() + tag.content + self._get_end_tag()
 
-    def _handle_start_behavior(self):
+    def _get_start_tag(self):
+        if "behavior" in self.attrs.keys():
+            return self._get_behavior_start()
+        if "animation" in self.attrs.keys():
+            return self._get_animation_start()
+        raise XmlTranslationException("do tag missing attribute")
+
+    def _get_end_tag(self):
+        if "animation" in self.attrs.keys():
+            return self._get_animation_end()
+        else:
+            return "<split/>"
+
+    def _get_behavior_start(self):
         return self.events['behavior'].to_string(self.attrs["behavior"])
 
-    def _handle_start_tag(self):
+    def _get_animation_start(self):
         given_path = self.attrs["animation"]
         if given_path is None:
             raise TypeError("animation path is None")
         path = given_path if animationNamespace is None else animationNamespace + given_path
         return "^start({}) ".format(path)
 
-    def _handle_end_tag(self):
+    def _get_animation_end(self):
         given_path = self.attrs["animation"]
-        if given_path is None:
-            raise TypeError("animation path is None")
         path = given_path if animationNamespace is None else animationNamespace + given_path
         return " ^wait({}) ".format(path)
 
