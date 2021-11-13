@@ -1,13 +1,9 @@
 # coding=utf-8
 import qi
-from constants import parser
+from args import ARGS
 
-parser.add_argument("--ip", help="IP address for NAO", required=True)
-parser.add_argument("--pr", help="Path of presentation (full path)", default="naoPPTX.pptx")
-
-args = parser.parse_args()
 session = qi.Session()
-session.connect("tcp://" + args.ip + ":" + "9559")
+session.connect("tcp://" + ARGS.ip + ":" + "9559")
 
 tts = session.service("ALTextToSpeech")
 atts = session.service("ALAnimatedSpeech")

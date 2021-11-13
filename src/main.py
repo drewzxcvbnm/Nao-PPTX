@@ -7,27 +7,31 @@ from pynput import keyboard
 from threading import Thread
 from general import kill_process
 from presentation import Presentation
-from services import asr, alife, args, tts
+from services import asr, alife, tts, behman
+from args import ARGS
 
 kill_process("POWERPNT.exe")
 
 
 def app_exit():
+    behman.stopAllBehaviors()
     presentation.__del__()
     reading_service.__del__()
     tts.stopAll()
-    alife.setState("interactive")
+    # alife.setState("interactive")
     kill_process("POWERPNT.exe")
     sys.exit(0)
 
 
 def on_press(key):
     if key == keyboard.Key.esc:
+        import pythoncom
+        pythoncom.CoInitializeEx(pythoncom.COINIT_MULTITHREADED)
         app_exit()
 
 
 listener = keyboard.Listener(on_press=lambda k: Thread(target=lambda: on_press(k)).start())
-path = args.pr
+path = ARGS.pr
 presentation = Presentation(path)
 reading_service = preader.PresentationReadingService()
 
