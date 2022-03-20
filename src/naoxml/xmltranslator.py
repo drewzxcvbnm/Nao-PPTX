@@ -166,14 +166,14 @@ class SurveyStartHandler:
         self.events = event_map
 
     def __call__(self, tag):
-        self.tag = XmlTag(tag)
+        self.tag = tag
         self.attrs = self.tag.attributes
         if self.tag.is_singular():
             return self._handle_start_tag() + self._handle_end_tag()
         return self._handle_start_tag() + self.tag.content + self._handle_end_tag()
 
     def _handle_start_tag(self):
-        return self.events['startsurvey'].to_string()
+        return self.events['startsurvey'].to_string(self.tag.attributes['id'])
 
     def _handle_end_tag(self):
         return " <split/> "

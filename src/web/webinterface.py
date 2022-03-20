@@ -31,7 +31,7 @@ class WebInterface:
         return _WebService.json_post(WebInterface.domain + '/create/presentation', json.dumps({"name": name}))
 
     @staticmethod
-    @InetDependent
+    @InetDependent()
     def create_survey(survey, pid):
         json_data = json.loads(jsonpickle.encode(survey, unpicklable=False))
         json_data = json.dumps(json_data)
@@ -39,7 +39,7 @@ class WebInterface:
         survey.remote_id = remote_id
 
     @staticmethod
-    @InetDependent
+    @InetDependent()
     def open_survey(survey):
         _WebService.get(WebInterface.domain + '/open/survey/{}'.format(survey.remote_id))
 
@@ -50,12 +50,12 @@ class WebInterface:
         return json.loads(resp)['status']
 
     @staticmethod
-    @InetDependent
+    @InetDependent()
     def delete_presentation(pid):
         _WebService.delete(WebInterface.domain + '/delete/presentation/{}'.format(pid))
 
     @staticmethod
-    @InetDependent
+    @InetDependent()
     def _safe_remove(json_map, field):
         if field in json_map:
             json_map.pop(field)
