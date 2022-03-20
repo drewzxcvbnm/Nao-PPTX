@@ -23,7 +23,7 @@ class WebInterface:
     def __init__(self):
         pass  # empty init
 
-    domain = 'www.tsinao.com'
+    domain = 'tsinao.com'
 
     @staticmethod
     @InetDependent(-1)

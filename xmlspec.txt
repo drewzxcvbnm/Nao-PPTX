@@ -45,41 +45,48 @@ TAGS:
 
 
 Survey example:
-	<survey id="2">
-		<pin>0A2X</pin>
-		<type>auto</type>
-		<questions>
-			<question>
-				<q>What is the first letter of the english alphabet?</q>
-				<validoption>1</validoption>
-				<options>
-					<o>A</o>
-					<o>B</o>
-					<o>C</o>
-				</options>
-			</question>
-			<question>
-				<q>What is the second letter?</q>
-				<timelimit>10</timelimit>
-				<validoption>2</validoption>
-				<options>
-					<o>Z</o>
-					<o>B</o>
-					<o>O</o>
-				</options>
-			</question>
-			<question>
-				<q>What is the Last letter?</q>
-				<timelimit>50</timelimit>
-				<validoption>1</validoption>
-				<options>
-					<o>Z</o>
-					<o>B</o>
-					<o>O</o>
-				</options>
-			</question>
-		</questions>
-	</survey>
+<survey id="2">
+   <pin>0A2X</pin>
+   <type>auto</type>
+   <questions>
+      <question>
+         <q>What is the first letter of the english alphabet?</q>
+         <validoptions>
+            <validoption>1</validoption>
+         </validoptions>
+         <options>
+            <o>A</o>
+            <o>B</o>
+            <o>C</o>
+         </options>
+      </question>
+      <question>
+         <q>What is the second letter?</q>
+         <timelimit>10</timelimit>
+         <validoptions>
+            <validoption>2</validoption>
+         </validoptions>
+         <options>
+            <o>Z</o>
+            <o>B</o>
+            <o>O</o>
+         </options>
+      </question>
+      <question>
+         <q>What is the Last letter?</q>
+         <timelimit>50</timelimit>
+         <validoptions>
+            <validoption>1</validoption>
+         </validoptions>
+         <options>
+            <o>Z</o>
+            <o>B</o>
+            <o>O</o>
+         </options>
+      </question>
+   </questions>
+</survey>
+
 
 
 Do example:

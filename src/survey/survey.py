@@ -18,10 +18,13 @@ class Survey:
     @staticmethod
     def _questions(questions_tag):
         questions = []
-        for ques in questions_tag.get_child_tag('question'):
+        for ques in questions_tag.get_child_tag_list('question'):
             options = [op.content for op in ques.get_child_tag('options').get_child_tag('o')]
             question = {"question": ques.get_child_tag_content('q'), "options": options}
-            if ques.get_child_tag_content('validoption') is not None:
-                question['validoption'] = int(ques.get_child_tag_content('validoption'))
+            question['validoptions'] = []
+            valid_options = ques.get_child_tag("validoptions")
+            if valid_options is not None:
+                for valid_opt in valid_options.get_child_tag_list('validoption'):
+                    question['validoptions'].append(int(valid_opt.content))
             questions.append(question)
         return questions

@@ -88,6 +88,11 @@ class XmlTag:
             content = content[r + 1:]
         return tags
 
+    def get_child_tag_list(self, name):
+        ch = self.child_tags
+        res = [i for i in ch if i.name == name]
+        return res
+
     def get_child_tag(self, name):
         ch = self.child_tags
         res = [i for i in ch if i.name == name]
