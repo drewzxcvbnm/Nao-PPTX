@@ -1,4 +1,5 @@
 # flake8: noqa E402
+import os
 import sys
 
 sys.coinit_flags = 0
@@ -34,7 +35,7 @@ def on_press(key):
 pythoncom.CoUninitialize()
 pythoncom.CoInitializeEx(pythoncom.COINIT_MULTITHREADED)
 listener = keyboard.Listener(on_press=lambda k: Thread(target=lambda: on_press(k)).start())
-path = ARGS.pr
+path = os.path.abspath(ARGS.pr)
 presentation = Presentation(path)
 reading_service = preader.PresentationReadingService()
 

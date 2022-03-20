@@ -3,3 +3,5 @@ enum
 mock
 pynput==1.6.8
 pywin32; sys_platform=='win32'
+jsonpickle
+python-pptx
